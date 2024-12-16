@@ -8,7 +8,21 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
 
 import '../services/calendar_client.dart';
-void login() async {
+import '../widgets/google_auth_button.dart';
+void logout() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  GoogleSignIn googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/calendar',
+    ],
+  );
+
+  await googleSignIn.signOut();
+  print('DEBUGGGG: Google user signed out');
+}
+Future<bool> login() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   GoogleSignIn googleSignIn = GoogleSignIn(
@@ -40,7 +54,8 @@ void login() async {
 
         userEmail= googleUser.email;
         userName= googleUser.displayName!;
-
+        isAuthenticated = true;
+        return true;
     }
   } on PlatformException catch (e) {
     print('DEBUGGGG: PlatformException: ${e.message}');
@@ -49,6 +64,7 @@ void login() async {
     print('DEBUGGGG: Exception: $e');
 
   }
+  return false;
 }
 
 

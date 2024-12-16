@@ -1,5 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
+import '../pages/connexion_page.dart';
+import '../pages/profile_settings_page.dart';
+import '../pages/welcome_page.dart';
+bool isAuthenticated = userName!='';
 class GoogleAccountToggle extends StatefulWidget {
   const GoogleAccountToggle({super.key});
 
@@ -8,14 +14,29 @@ class GoogleAccountToggle extends StatefulWidget {
 }
 
 class _GoogleAccountToggleState extends State<GoogleAccountToggle> {
-  bool _isAuthenticated = false; // Détermine si l'utilisateur est authentifié ou non
+   // Détermine si l'utilisateur est authentifié ou non
 
   // Méthode pour simuler l'authentification
   void _toggleAuthentication() {
-    setState(() {
-      _isAuthenticated = !_isAuthenticated; // Bascule l'état d'authentification
+    if (isAuthenticated) {
+      setState(() {
+        userName = '';
+        userEmail = '';
+        isAuthenticated = false;
+        logout();
+      });
+    } else {
+      setState(() {
+
+
+
+        login().then((value) => setState(() {
+          isAuthenticated = value;
+        }));
     });
-  }
+          }
+      }
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +81,8 @@ class _GoogleAccountToggleState extends State<GoogleAccountToggle> {
         // Bouton sous forme de logo (icône d'authentification)
         IconButton(
           icon: Icon(
-            _isAuthenticated ? Icons.check_circle_outlined : Icons.cancel_outlined, // Change l'icône en fonction de l'état
-            color: _isAuthenticated ? Colors.green : Colors.red, // Couleur de l'icône
+            isAuthenticated ? Icons.check_circle_outlined : Icons.cancel_outlined, // Change l'icône en fonction de l'état
+            color: isAuthenticated ? Colors.green : Colors.red, // Couleur de l'icône
             size: 30, // Taille de l'icône
           ),
           onPressed: _toggleAuthentication, // Méthode appelée au clic

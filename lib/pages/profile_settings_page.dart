@@ -13,6 +13,10 @@ class ProfilePage extends StatefulWidget {
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
+
+  static void build(BuildContext context) {
+    ProfilePage.build(context);
+  }
 }
 
 class _ProfilePageState extends State<ProfilePage> {
@@ -80,7 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 title: 'Preferences',
                 children: [
                   const NotificationToggle(),
-                  const GoogleAccountToggle(),
+                   const GoogleAccountToggle(),
                   GestureDetector(
                     onTap: () {
                       // Redirection when tapping the entire widget

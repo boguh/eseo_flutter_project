@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../pages/event_details_page.dart';
 import '../pages/loading_page.dart';
-import '../pages/settings_page.dart';
+
 import '../pages/profile_settings_page.dart';
 import '../pages/teams_select_page.dart';
 import '../pages/welcome_page.dart';

@@ -1,6 +1,6 @@
-import 'package:eseo_flutter_project/widgets/google_auth_button.dart';
-import 'package:eseo_flutter_project/widgets/notifications_toggle.dart';
-import 'package:eseo_flutter_project/widgets/team_list.dart';
+import '../widgets/google_auth_button.dart';
+import '../widgets/notifications_toggle.dart';
+import '../widgets/team_list.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../utils/router.dart';

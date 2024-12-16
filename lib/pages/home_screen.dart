@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:googleapis/calendar/v3.dart' as cal;
-import '../models/calendar_client.dart';
+import '../services/calendar_client.dart';
 import 'event_creation_screen.dart';
 class HomeScreen extends StatelessWidget {
   final String userEmail;

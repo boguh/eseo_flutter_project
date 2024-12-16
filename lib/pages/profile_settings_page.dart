@@ -1,7 +1,11 @@
+import '../widgets/google_auth_button.dart';
+import '../widgets/notifications_toggle.dart';
+import '../widgets/team_list.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../utils/router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../widgets/actions_menu.dart';
 import 'connexion_page.dart' show login; // Import the login function
 
 class ProfilePage extends StatefulWidget {
@@ -57,7 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
             if (GoRouter.of(context).canPop()) {
               context.pop();
             } else {
-              context.go(RouteNames.settings.path); // Fallback navigation
+              context.go(RouteNames.welcome.path); // Fallback navigation
             }
           },
           tooltip: 'Go back',
@@ -67,16 +71,24 @@ class _ProfilePageState extends State<ProfilePage> {
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Main content of the page
-              ElevatedButton(
-                onPressed: () {
-                  login(); // Call the login function on button press
-                },
-                child: Text('Settings', style: TextStyle(color: Colors.white)),
+              ActionsMenu(
+                title: 'Preferences',
+                children: [
+                  const NotificationToggle(),
+                  const GoogleAccountToggle(),
+                  GestureDetector(
+                    onTap: () {
+                      // Redirection when tapping the entire widget
+                      context.go(RouteNames.teams.path);
+                    },
+                    child: const TeamsListRedirect(),
+                  ),
+                ],
               ),
             ],
           ),

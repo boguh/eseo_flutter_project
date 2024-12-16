@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../pages/event_details_page.dart';
 import '../pages/loading_page.dart';
-import '../pages/settings_page.dart';
+
 import '../pages/profile_settings_page.dart';
 import '../pages/teams_select_page.dart';
 import '../pages/welcome_page.dart';
@@ -27,10 +27,6 @@ class AppRouter {
         builder: (context, state) => const DetailsPage(),
       ),
       GoRoute(
-        path: RouteNames.settings.path, // Correct reference to the enum's path
-        builder: (context, state) => const SettingsPage(),
-      ),
-      GoRoute(
         path: RouteNames.teams.path, // Correct reference to the enum's path
         builder: (context, state) => const TeamsPage(),
       ),
@@ -51,7 +47,6 @@ enum RouteNames {
   loading('/loading'),
   welcome('/welcome'),
   details('/details'),
-  settings('/settings'),
   teams('/teams'),
   profile('/profile');
 

@@ -19,7 +19,7 @@ class Event {
   Map<String, dynamic> toJson() {
     return {
       'date': date.toIso8601String(),
-      'time': time.format(DateTime(0)),
+      'time': time.format(DateTime(0) as BuildContext),
       'location': location,
       'homeTeam': homeTeam,
       'visitorTeam': visitorTeam,

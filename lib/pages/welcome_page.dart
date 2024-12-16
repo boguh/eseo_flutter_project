@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+String userEmail= '';
+String userName= '';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -52,13 +54,20 @@ class _WelcomePageState extends State<WelcomePage> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : const SafeArea(
+          :  SafeArea( // TODO remettre const?
         child: SingleChildScrollView(
           padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Main content of the page
+              Text (
+                'Welcome, $userName!',
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../utils/router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'connexion_page.dart' show login; // Import the login function
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -64,13 +65,19 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : const SafeArea(
+          : SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Main content of the page
+              ElevatedButton(
+                onPressed: () {
+                  login(); // Call the login function on button press
+                },
+                child: Text('Settings', style: TextStyle(color: Colors.white)),
+              ),
             ],
           ),
         ),

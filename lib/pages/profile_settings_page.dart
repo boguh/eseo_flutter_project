@@ -1,7 +1,11 @@
+import 'package:eseo_flutter_project/widgets/google_auth_button.dart';
+import 'package:eseo_flutter_project/widgets/notifications_toggle.dart';
+import 'package:eseo_flutter_project/widgets/team_list.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:eseo_flutter_project/utils/router.dart';
+import '../utils/router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../widgets/actions_menu.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -56,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
             if (GoRouter.of(context).canPop()) {
               context.pop();
             } else {
-              context.go(RouteNames.settings.path); // Fallback navigation
+              context.go(RouteNames.welcome.path); // Fallback navigation
             }
           },
           tooltip: 'Go back',
@@ -64,13 +68,27 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : const SafeArea(
+          : SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Main content of the page
+              ActionsMenu(
+                title: 'Preferences',
+                children: [
+                  const NotificationToggle(),
+                  const GoogleAccountToggle(),
+                  GestureDetector(
+                    onTap: () {
+                      // Redirection when tapping the entire widget
+                      context.go(RouteNames.teams.path);
+                    },
+                    child: const TeamsListRedirect(),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

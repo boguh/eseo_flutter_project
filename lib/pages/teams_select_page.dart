@@ -56,7 +56,7 @@ class _TeamsPageState extends State<TeamsPage> {
             if (GoRouter.of(context).canPop()) {
               context.pop();
             } else {
-              context.go(RouteNames.settings.path); // Fallback navigation
+              context.go(RouteNames.profile.path); // Fallback navigation
             }
           },
           tooltip: 'Go back',

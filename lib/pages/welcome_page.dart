@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../utils/router.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -45,7 +46,7 @@ class _WelcomePageState extends State<WelcomePage> {
             size: 35,
           ), // Menu icon
           onPressed: () {
-            context.go('/settings'); // Navigate to settings page
+            context.go(RouteNames.profile.path); // Navigate to settings page
           },
           tooltip: 'Settings',
         ),

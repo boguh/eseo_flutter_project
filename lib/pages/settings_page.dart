@@ -2,6 +2,9 @@ import '../widgets/google_auth_button.dart';
 import '../widgets/notifications_toggle.dart';
 import '../widgets/personal_information.dart';
 import '../widgets/team_list.dart';
+import '../widgets/google_auth_button.dart';
+import '../widgets/notifications_toggle.dart';
+import '../widgets/team_list.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../utils/router.dart';
@@ -116,6 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: 'Preferences',
                 children: [
                   const NotificationToggle(),
+                  const GoogleAccountToggle(),
                   GestureDetector(
                     onTap: () {
                       // Redirection when tapping the entire widget

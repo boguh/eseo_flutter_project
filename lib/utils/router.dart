@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:eseo_flutter_project/pages/event_details_page.dart';
-import 'package:eseo_flutter_project/pages/loading_page.dart';
-import 'package:eseo_flutter_project/pages/profile_settings_page.dart';
-import 'package:eseo_flutter_project/pages/teams_select_page.dart';
-import 'package:eseo_flutter_project/pages/welcome_page.dart';
+import '../pages/event_details_page.dart';
+import '../pages/loading_page.dart';
+import '../pages/profile_page.dart';
+import '../pages/settings_page.dart';
+import '../pages/teams_select_page.dart';
+import '../pages/welcome_page.dart';
+
+
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -28,7 +31,11 @@ class AppRouter {
         builder: (context, state) => const TeamsPage(),
       ),
       GoRoute(
-        path: RouteNames.profile.path, // Correct reference to the enum's path
+        path: RouteNames.settings.path, // Correct reference to the enum's path
+        builder: (context, state) => const SettingsPage(),
+      ),
+      GoRoute(
+          path: RouteNames.profile.path, // Correct reference to the enum's path
         builder: (context, state) => const ProfilePage(),
       ),
     ],
@@ -45,6 +52,7 @@ enum RouteNames {
   welcome('/welcome'),
   details('/details'),
   teams('/teams'),
+  settings('/settings'),
   profile('/profile');
 
   final String path;

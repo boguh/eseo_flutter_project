@@ -48,7 +48,7 @@ class _GoogleAccountToggleState extends State<GoogleAccountToggle> {
             ),
             const SizedBox(width: 10),
             const Text(
-              'Google Account', // Titre
+              'Google Authentication', // Titre
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,

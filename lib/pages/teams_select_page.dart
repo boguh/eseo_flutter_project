@@ -1,8 +1,9 @@
-import 'package:eseo_flutter_project/widgets/icon_checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../utils/router.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../widgets/icon_checkbox.dart';
 
 /// Page to select the teams
 class TeamsPage extends StatefulWidget {

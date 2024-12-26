@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../utils/router.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
-
+import '../widgets/calendar_widget.dart';
 String userEmail= '';
 String userName= '';
 
-import '../widgets/calendar_widget.dart';
+
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -170,20 +170,21 @@ class _WelcomePageState extends State<WelcomePage> {
   }
   Future<void> getFavoriteTeamsMatches(List<String> teamIds) async {
     List<QueryDocumentSnapshot> matches = [];
-    int s=0;
+    int s = 0;
     for (String teamId in teamIds) {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('matches')
           .where('teamId', isEqualTo: teamId)
           .get();
       matches.addAll(querySnapshot.docs);
-      s+= querySnapshot.docs.length;
+      s += querySnapshot.docs.length;
     };
     debugPrint('Matches: $s');
 
-  @override
-  void dispose() {
-    // Clean up controllers, listeners, etc.
-    super.dispose();
+    @override
+    void dispose() {
+      // Clean up controllers, listeners, etc.
+      super.dispose();
+    }
   }
 }

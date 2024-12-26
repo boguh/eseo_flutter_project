@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../pages/connexion_page.dart';
-import '../pages/profile_settings_page.dart';
+
 import '../pages/welcome_page.dart';
 bool isAuthenticated = userName!='';
 class GoogleAccountToggle extends StatefulWidget {

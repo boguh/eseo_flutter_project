@@ -16,12 +16,11 @@ class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<SettingsPage> createState() => _SettingsPageState();
 
   static void build(BuildContext context) {
-    ProfilePage.build(context);
+    SettingsPage.build(context);
   }
-  State<SettingsPage> createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {

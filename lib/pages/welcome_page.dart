@@ -143,7 +143,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
                                 const SizedBox(height: 5.0),
                                 Text(
-                                  'Team: ${match.location}',
+                                  'Team: ${match.homeTeam}',
                                   style: const TextStyle(
                                     fontSize: 16.0,
                                   ),

@@ -1,86 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import '../utils/router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../models/event.dart';
 
-class DetailsPage extends StatefulWidget {
-  const DetailsPage({super.key});
+class EventDetailsPage extends StatelessWidget {
+  final Event event;
 
-  @override
-  State<DetailsPage> createState() => _DetailsPageState();
-}
-
-class _DetailsPageState extends State<DetailsPage> {
-  // State variables
-  bool _isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializePage();
-  }
-
-  Future<void> _initializePage() async {
-    setState(() => _isLoading = true);
-    try {
-      // Async initialization logic (API calls, data loading)
-    } catch (e) {
-      // Error handling
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
+  const EventDetailsPage({Key? key, required this.event}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 100,
-        centerTitle: true,
-        title: Text(
-          'Details',
-          style: GoogleFonts.roboto(
-            fontWeight: FontWeight.w600,
-            fontSize: 25,
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_rounded,
-            size: 35,
-          ),
-          onPressed: () {
-            if (GoRouter.of(context).canPop()) {
-              context.pop();
-            } else {
-              context.go(RouteNames.welcome.path); // Fallback navigation
-            }
-          },
-          tooltip: 'Go back',
-        ),
+        title: Text('Event Details'),
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : const SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Main content of the page
-            ],
-          ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Location: ${event.location}', style: TextStyle(fontSize: 18)),
+            Text('Home Team: ${event.homeTeam}', style: TextStyle(fontSize: 18)),
+            Text('Visitor Team: ${event.visitorTeam}', style: TextStyle(fontSize: 18)),
+            Text('Date: ${event.weekDay}, ${event.numberDay}/ ${event.month}', style: TextStyle(fontSize: 18)),
+
+            Text('Time: ${event.time.format(context)}', style: TextStyle(fontSize: 18)),
+          ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    // Clean up controllers, listeners, etc.
-    super.dispose();
   }
 }

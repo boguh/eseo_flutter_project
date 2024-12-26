@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../models/event.dart';
 import '../pages/event_details_page.dart';
 import '../pages/loading_page.dart';
 import '../pages/profile_page.dart';
@@ -23,8 +24,11 @@ class AppRouter {
         builder: (context, state) => const WelcomePage(),
       ),
       GoRoute(
-        path: RouteNames.details.path, // Correct reference to the enum's path
-        builder: (context, state) => const DetailsPage(),
+        path: RouteNames.details.path,
+        builder: (context, state) {
+          final event = state.extra as Event;
+          return EventDetailsPage(event: event);
+        },
       ),
       GoRoute(
         path: RouteNames.teams.path, // Correct reference to the enum's path

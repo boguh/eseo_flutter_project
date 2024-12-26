@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../models/event.dart';
 import '../utils/router.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 import '../widgets/calendar_widget.dart';
+import 'event_details_page.dart';
 String userEmail= '';
 String userName= '';
-
-
+List<String> favoriteTeams = ['SLB'];
+List <Event> displayedEvents = [];
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -30,12 +32,9 @@ class _WelcomePageState extends State<WelcomePage> {
   Future<void> _initializePage() async {
     setState(() => _isLoading = true);
     try {
-      getFavoriteTeamsMatches(['1', '2']);
+      getFavoriteTeamsMatches(favoriteTeams);
       // Async initialization logic (API calls, data loading)
-      DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('test').doc('1').get();
-      setState(() {
-        _testData = snapshot['oe'];
-      });
+
 
 
     } catch (e) {
@@ -120,9 +119,18 @@ class _WelcomePageState extends State<WelcomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Add the events here if there are any, else display a message
-                      if (events.isNotEmpty)
-                        for (final event in events)
-                          Container(
+                      if (displayedEvents.isNotEmpty)
+                        for (final match in displayedEvents)
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EventDetailsPage(event: match),
+                                ),
+                              );
+                            },
+                          child:Container(
                             margin: const EdgeInsets.only(bottom: 10.0),
                             padding: const EdgeInsets.all(10.0),
                             decoration: BoxDecoration(
@@ -132,26 +140,33 @@ class _WelcomePageState extends State<WelcomePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  event['title'],
-                                  style: const TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+
                                 const SizedBox(height: 5.0),
                                 Text(
-                                  event['description'],
+                                  'Team: ${match.location}',
+                                  style: const TextStyle(
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                Text(
+                                  'Opponent: ${match.visitorTeam}',
+                                  style: const TextStyle(
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                Text(
+                                  'Date: ${match.weekDay}, ${match.numberDay}/${match.month}',
                                   style: const TextStyle(
                                     fontSize: 16.0,
                                   ),
                                 ),
                               ],
                             ),
+                          ),
                           )
                       else
                         const Text(
-                            'No events found',
+                            'No events found ',
                             style: TextStyle(
                               fontSize: 13.0,
                               fontWeight: FontWeight.bold,
@@ -174,17 +189,26 @@ class _WelcomePageState extends State<WelcomePage> {
     for (String teamId in teamIds) {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('matches')
-          .where('teamId', isEqualTo: teamId)
+          .where('visitor', isEqualTo: teamId)
           .get();
       matches.addAll(querySnapshot.docs);
       s += querySnapshot.docs.length;
+      QuerySnapshot querySnapshot2 = await FirebaseFirestore.instance
+          .collection('matches')
+          .where('home', isEqualTo: teamId)
+          .get();
+      matches.addAll(querySnapshot2.docs);
+      s += querySnapshot2.docs.length;
     };
     debugPrint('Matches: $s');
-
+    setState(() {
+      displayedEvents = matches.map((e) => Event.fromFirestore(e)).toList();
+    });
+  }
     @override
     void dispose() {
       // Clean up controllers, listeners, etc.
       super.dispose();
     }
-  }
+
 }

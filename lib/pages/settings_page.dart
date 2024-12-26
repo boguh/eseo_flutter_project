@@ -1,5 +1,9 @@
 import '../widgets/google_auth_button.dart';
 import '../widgets/notifications_toggle.dart';
+import '../widgets/personal_information.dart';
+import '../widgets/team_list.dart';
+import '../widgets/google_auth_button.dart';
+import '../widgets/notifications_toggle.dart';
 import '../widgets/team_list.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -8,8 +12,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../widgets/actions_menu.dart';
 import 'connexion_page.dart' show login; // Import the login function
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -17,9 +21,10 @@ class ProfilePage extends StatefulWidget {
   static void build(BuildContext context) {
     ProfilePage.build(context);
   }
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _SettingsPageState extends State<SettingsPage> {
   // State variables
   bool _isLoading = false;
 
@@ -50,7 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
         toolbarHeight: 100,
         centerTitle: true,
         title: Text(
-          'Manage Profile',
+          'Settings',
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w600,
             fontSize: 25,
@@ -77,9 +82,45 @@ class _ProfilePageState extends State<ProfilePage> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Main content of the page
+              // First section : Profile picture and name
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircleAvatar(
+                    radius: 50,
+                    backgroundImage: AssetImage('assets/images/profile.jpg'),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'John Doe',
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 40,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 30),
+              // Second section : Account settings
+              ActionsMenu(
+                title: 'Account',
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      // Redirection when tapping the entire widget
+                      context.go(RouteNames.profile.path);
+                    },
+                    child: const PersonalInfoRedirect(),
+                  ),
+                  const GoogleAccountToggle(),
+                ],
+              ),
+              // Add some space between sections
+              const SizedBox(height: 30),
+              // Third section : Preferences
               ActionsMenu(
                 title: 'Preferences',
                 children: [

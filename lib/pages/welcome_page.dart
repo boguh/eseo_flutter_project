@@ -104,7 +104,8 @@ class _WelcomePageState extends State<WelcomePage> {
                       onWeekChanged: (week) {
                         setState(() {
                           _selectedWeek = week;
-                          _getEvents(_selectedWeek);
+                          debugPrint ('Week: $week');
+                          getFavoriteTeamsMatches(favoriteTeams);
                         });
                       },
                     ),
@@ -183,6 +184,14 @@ class _WelcomePageState extends State<WelcomePage> {
       ),
     );
   }
+  bool isDateInWeek(Timestamp timestamp, int weekNumber, int year) {
+    DateTime date = timestamp.toDate();
+    DateTime startOfYear = DateTime(year, 1, 1);
+    DateTime startOfWeek = startOfYear.add(Duration(days: (weekNumber - 1) * 7));
+    DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
+
+    return date.isAfter(startOfWeek) && date.isBefore(endOfWeek.add(Duration(days: 1)));
+  }
   Future<void> getFavoriteTeamsMatches(List<String> teamIds) async {
     List<QueryDocumentSnapshot> matches = [];
     int s = 0;
@@ -199,16 +208,27 @@ class _WelcomePageState extends State<WelcomePage> {
           .get();
       matches.addAll(querySnapshot2.docs);
       s += querySnapshot2.docs.length;
-    };
+    }
     debugPrint('Matches: $s');
+
+    List<QueryDocumentSnapshot> matchesToRemove = [];
+    for (QueryDocumentSnapshot match in matches) {
+      if (_selectedWeek > 30) {
+        if (!isDateInWeek(match['time'], _selectedWeek, DateTime.now().year)) {
+          debugPrint('Match: $match');
+          matchesToRemove.add(match);
+        }
+      } else {
+        if (!isDateInWeek(match['time'], _selectedWeek, DateTime.now().year + 1)) {
+          matchesToRemove.add(match);
+        }
+      }
+    }
+
+    matches.removeWhere((match) => matchesToRemove.contains(match));
+
     setState(() {
       displayedEvents = matches.map((e) => Event.fromFirestore(e)).toList();
     });
   }
-    @override
-    void dispose() {
-      // Clean up controllers, listeners, etc.
-      super.dispose();
-    }
-
-}
+  }

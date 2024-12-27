@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import '../models/event.dart';
 import '../utils/router.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
@@ -16,11 +17,16 @@ class WelcomePage extends StatefulWidget {
   @override
   State<WelcomePage> createState() => _WelcomePageState();
 }
+int getCurrentWeekNumber() {
+  DateTime now = DateTime.now();
+  int dayOfYear = int.parse(DateFormat("D").format(now));
+  return ((dayOfYear - now.weekday + 10) / 7).floor();
+}
 
 class _WelcomePageState extends State<WelcomePage> {
   // State variables
   bool _isLoading = false;
-  int _selectedWeek = 1;
+  int _selectedWeek=  getCurrentWeekNumber();
 
   String _testData = '';
   @override
@@ -99,6 +105,8 @@ class _WelcomePageState extends State<WelcomePage> {
                       onMonthChanged: (month) {
                         setState(() {
                           // _getEvents(_selectedWeek);
+                          getFavoriteTeamsMatches(favoriteTeams);
+
                         });
                       },
                       onWeekChanged: (week) {

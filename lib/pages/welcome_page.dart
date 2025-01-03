@@ -221,15 +221,39 @@ class _WelcomePageState extends State<WelcomePage> {
 
     List<QueryDocumentSnapshot> matchesToRemove = [];
     for (QueryDocumentSnapshot match in matches) {
-      if (_selectedWeek > 30) {
-        if (!isDateInWeek(match['time'], _selectedWeek, DateTime.now().year)) {
-          debugPrint('Match: $match');
-          matchesToRemove.add(match);
+      var _currentWeek = getCurrentWeekNumber();
+      if (_currentWeek>30) {
+        if (_selectedWeek > 30) {
+          if (!isDateInWeek(match['time'], _selectedWeek, DateTime
+              .now()
+              .year)) {
+            debugPrint('Match: $match');
+            matchesToRemove.add(match);
+          }
+        } else {
+          if (!isDateInWeek(match['time'], _selectedWeek, DateTime
+              .now()
+              .year + 1)) {
+            matchesToRemove.add(match);
+          }
         }
-      } else {
-        if (!isDateInWeek(match['time'], _selectedWeek, DateTime.now().year + 1)) {
-          matchesToRemove.add(match);
+      }
+      else{
+        if (_selectedWeek < 30) {
+          if (!isDateInWeek(match['time'], _selectedWeek, DateTime
+              .now()
+              .year)) {
+            debugPrint('Match: $match');
+            matchesToRemove.add(match);
+          }
+        } else {
+          if (!isDateInWeek(match['time'], _selectedWeek, DateTime
+              .now()
+              .year - 1)) {
+            matchesToRemove.add(match);
+          }
         }
+
       }
     }
 

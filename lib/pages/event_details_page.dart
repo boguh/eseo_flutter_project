@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/event.dart';
 import '../services/calendar_client.dart';
+import '../widgets/actions_menu.dart';
 
 class EventDetailsPage extends StatelessWidget {
   final Event event;
 
-  const EventDetailsPage({Key? key, required this.event}) : super(key: key);
+  const EventDetailsPage({super.key, required this.event});
 
   Future<void> _createEvent(BuildContext context) async {
 
@@ -42,25 +45,109 @@ class EventDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Event Details'),
+        toolbarHeight: 100,
+        centerTitle: true,
+        title: Text(
+          'Event Details',
+          style: GoogleFonts.roboto(
+            fontWeight: FontWeight.w600,
+            fontSize: 25,
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_rounded,
+            size: 35,
+          ),
+          tooltip: 'Go back', onPressed: () {
+            if (GoRouter.of(context).canPop()) {
+              context.pop();
+            } else {
+              context.go('/');
+            }
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Home Team: ${event.homeTeam}', style: const TextStyle(fontSize: 18)),
-            Text('Visitor Team: ${event.visitorTeam}', style: const TextStyle(fontSize: 18)),
-            Text('Date: ${event.date}', style: const TextStyle(fontSize: 18)),
-            Text('Time: ${event.time}', style: const TextStyle(fontSize: 18)),
-            const SizedBox(height: 20),
+            _buildEventDetails(),
             ElevatedButton(
               onPressed: () => _createEvent(context),
-              child: const Text('Create Event'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+                backgroundColor: Colors.blueAccent,
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              child: const Text(
+                'Create Event',
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildEventDetails() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ActionsMenu(
+          title: 'Teams',
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Icon(Icons.home_rounded, size: 30),
+                Text(_formatTeamName(event.visitorTeam), style: const TextStyle(fontSize: 18)),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Icon(Icons.flight_rounded, size: 30),
+                Text(_formatTeamName(event.homeTeam), style: const TextStyle(fontSize: 18)),
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        ActionsMenu(
+          title: 'Event Details',
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Icon(Icons.date_range_rounded, size: 30),
+                Text(event.date, style: const TextStyle(fontSize: 18)),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Icon(Icons.access_time_rounded, size: 30),
+                Text(event.time, style: const TextStyle(fontSize: 18)),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// Format the team name to be displayed by shorting it to the first 20 characters and adding ellipsis
+  String _formatTeamName(String teamName) {
+    if (teamName.length > 20) {
+      return '${teamName.substring(0, 20)}...';
+    }
+    return teamName;
   }
 }

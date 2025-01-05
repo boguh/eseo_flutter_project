@@ -21,6 +21,10 @@ class MyApp extends StatelessWidget {
       title: 'Buni',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        textSelectionTheme: const TextSelectionThemeData(
+            cursorColor: Colors.blueAccent,
+        ),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
     );
   }

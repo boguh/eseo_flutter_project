@@ -24,10 +24,4 @@ class Event {
       visitorTeam: data['visit'] ?? '',
     );
   }
-
-  /// Creates an [Event] object from a Firestore document
-  factory Event.fromFirestore(DocumentSnapshot<Object?> doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    return Event.fromMap(data);
-  }
 }

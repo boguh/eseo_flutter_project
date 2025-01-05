@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import '../utils/router.dart';
+import 'package:go_router/go_router.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({super.key, this.onMonthChanged, this.onWeekChanged});
@@ -78,7 +80,6 @@ class _CalendarState extends State<Calendar> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildMonthSelector(),
-            const SizedBox(height: 10.0),
             _buildWeeksDisplay(),
           ],
         ),
@@ -93,7 +94,21 @@ class _CalendarState extends State<Calendar> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
       ),
+      width: MediaQuery.of(context).size.width * 0.5,
       child: CustomDropdown<String>(
+
+        decoration: const CustomDropdownDecoration(
+          closedFillColor: Colors.blueAccent,
+          headerStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 32.0,
+            fontWeight: FontWeight.bold,
+          ),
+          closedSuffixIcon: Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: Colors.white,
+          ),
+        ),
         hintText: 'Select a month',
         items: Month.values.map((month) => month.name).toList(),
         initialItem: _selectedMonth,
@@ -107,7 +122,7 @@ class _CalendarState extends State<Calendar> {
             widget.onMonthChanged!(value!);
           }
         },
-      )
+      ),
     );
   }
 
@@ -127,11 +142,11 @@ class _CalendarState extends State<Calendar> {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
           padding: const EdgeInsets.symmetric(
-              vertical: 8.0, horizontal: 16.0),
+              vertical: 16.0, horizontal: 16.0),
           decoration: BoxDecoration(
             color:
             _selectedWeek != week ? Colors.blueAccent : Colors.white,
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(50.0),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -146,11 +161,11 @@ class _CalendarState extends State<Calendar> {
                       : Colors.black,
                 ),
               ),
-              const SizedBox(height: 4.0),
+              const SizedBox(height: 2.0),
               Text(
                 '$week',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: _selectedWeek != week
                       ? Colors.white
@@ -173,18 +188,18 @@ extension on DateTime {
 
 /// Enum to represent the months of the year according to the basketball season
 enum Month {
-  september(9, 'September', 30),
-  october(10, 'October', 31),
-  november(11, 'November', 30),
-  december(12, 'December', 31),
-  january(1, 'January', 31),
-  february(2, 'February', 28),
-  march(3, 'March', 31),
-  april(4, 'April', 30),
+  september(9, 'Sept', 30),
+  october(10, 'Oct', 31),
+  november(11, 'Nov', 30),
+  december(12, 'Dec', 31),
+  january(1, 'Jan', 31),
+  february(2, 'Feb', 28),
+  march(3, 'Mar', 31),
+  april(4, 'Apr', 30),
   may(5, 'May', 31),
-  june(6, 'June', 30),
-  july(7, 'July', 31),
-  august(8, 'August', 31);
+  june(6, 'Jun', 30),
+  july(7, 'Jul', 31),
+  august(8, 'Aug', 31);
 
   // Month properties
   final int value;

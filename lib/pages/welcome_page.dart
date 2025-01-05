@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/event.dart';
-import '../utils/router.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
+import '../utils/router.dart';
 import '../widgets/calendar_widget.dart';
 import 'event_details_page.dart';
 
@@ -25,6 +25,7 @@ class WelcomePage extends StatefulWidget {
   State<WelcomePage> createState() => _WelcomePageState();
 }
 
+/// Get the current week number
 int getCurrentWeekNumber() {
   DateTime now = DateTime.now();
   int dayOfYear = int.parse(DateFormat("D").format(now));
@@ -47,12 +48,14 @@ class _WelcomePageState extends State<WelcomePage> {
 
   late SharedPreferences _prefs;
 
+  /// Initialize the state
   @override
   void initState() {
     super.initState();
     _initializePage();
   }
 
+  /// Initialize the page
   Future<void> _initializePage() async {
     setState(() => _isLoading = true);
     try {
@@ -72,6 +75,7 @@ class _WelcomePageState extends State<WelcomePage> {
     }
   }
 
+  /// Get the week number from a date
   int getWeekNumber(String date) {
     DateFormat dateFormat = DateFormat('dd/MM/yyyy');
     DateTime dateTime = dateFormat.parse(date);
@@ -79,6 +83,7 @@ class _WelcomePageState extends State<WelcomePage> {
     return ((dayOfYear - dateTime.weekday + 10) / 7).floor();
   }
 
+  /// Fetch the matches for a selected team
   Future<void> _fetchSelectedTeamMatches(String teamName, int selectedWeek) async {
     print('Fetching matches for $teamName');
     final QuerySnapshot querySnapshot =
@@ -98,34 +103,6 @@ class _WelcomePageState extends State<WelcomePage> {
         }
       }
     });
-  }
-
-  Future<void> _fetchFavoriteTeamMatches(String teamName, int selectedWeek) async {
-    print('Fetching matches for $teamName');
-    final QuerySnapshot querySnapshot =
-    await FirebaseFirestore.instance.collection('equipes').get();
-    if (!mounted) return;
-    setState(() {
-      for (var doc in querySnapshot.docs) {
-        if (doc.id == teamName) {
-          for (Map<String, dynamic> match in doc['matches']) {
-            String date = match['date'];
-            if (getWeekNumber(date) == selectedWeek) {
-              Event event = Event.fromMap(match);
-              favoriteTeamsEvents.add(event);
-            }
-          }
-        }
-      }
-    });
-  }
-
-  /// Fetch teams from Firestore
-  Future<void> getFavoriteTeamsMatches() async {
-    favoriteTeamsEvents.clear();
-    for (var team in favoriteTeams) {
-      await _fetchFavoriteTeamMatches(team, _selectedWeek);
-    }
   }
 
   /// Fetch teams from Firestore
@@ -214,7 +191,6 @@ class _WelcomePageState extends State<WelcomePage> {
                 _isLoading = true;
               });
               await getSelectedTeamsMatches();
-              await getFavoriteTeamsMatches();
               setState(() {
                 _isLoading = false;
               });
@@ -226,7 +202,6 @@ class _WelcomePageState extends State<WelcomePage> {
                 debugPrint('Week: $week');
               });
               await getSelectedTeamsMatches();
-              await getFavoriteTeamsMatches();
               setState(() {
                 _isLoading = false;
               });
@@ -237,6 +212,7 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
+  /// Build an event card
   Widget _buildEventCard(BuildContext context, Event match) {
     return GestureDetector(
       onTap: () {
@@ -257,22 +233,25 @@ class _WelcomePageState extends State<WelcomePage> {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // Add a gap between the elements
           children: [
+            Text(
+              '${match.date} at ${match.time}',
+              style: const TextStyle(
+                fontSize: 20.0,
+              ),
+            ),
             const SizedBox(height: 5.0),
             Text(
-              'Team: ${match.homeTeam}',
+              match.homeTeam,
               style: const TextStyle(
                 fontSize: 16.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
             Text(
-              'Opponent: ${match.visitorTeam}',
-              style: const TextStyle(
-                fontSize: 16.0,
-              ),
-            ),
-            Text(
-              'Date: ${match.date}',
+              match.visitorTeam,
               style: const TextStyle(
                 fontSize: 16.0,
               ),

@@ -79,38 +79,11 @@ class _SettingsPageState extends State<SettingsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // First section : Profile picture and name
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CircleAvatar(
-                    radius: 50,
-                    backgroundImage: AssetImage('assets/images/profile.jpg'),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'John Doe',
-                    style: GoogleFonts.roboto(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 40,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 30),
-              // Second section : Account settings
-              ActionsMenu(
+              // Account settings
+              const ActionsMenu(
                 title: 'Account',
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      // Redirection when tapping the entire widget
-                      context.go(RouteNames.profile.path);
-                    },
-                    child: const PersonalInfoRedirect(),
-                  ),
-                  const GoogleAccountToggle(),
+                  GoogleAccountToggle(),
                 ],
               ),
               // Add some space between sections

@@ -45,12 +45,10 @@ class _TeamsPageState extends State<TeamsPage> {
   final Map<String, Map<String, dynamic>> _teams = {}; // Teams data
 
   bool _showSelectedOnly = false; // Show selected teams only
-  bool _showMarkedOnly = false; // Show marked teams only
 
   /// Keys used for storing data in SharedPreferences
   static const String _teamsPrefsKey = 'stored_teams'; // Key for storing teams
   static const String _selectedTeamsKey = 'selected_teams'; // Key for storing selected teams
-  static const String _markedTeamsKey = 'marked_teams'; // Key for storing marked teams
 
   late SharedPreferences _prefs; // SharedPreferences instance
 
@@ -81,12 +79,10 @@ class _TeamsPageState extends State<TeamsPage> {
   /// Load the selected and marked states of teams from SharedPreferences
   Future<void> _loadTeamStates() async {
     final selectedTeams = _prefs.getStringList(_selectedTeamsKey) ?? [];
-    final markedTeams = _prefs.getStringList(_markedTeamsKey) ?? [];
 
     setState(() {
       for (var teamId in _teams.keys) {
         _teams[teamId]?['selected'] = selectedTeams.contains(teamId);
-        _teams[teamId]?['marked'] = markedTeams.contains(teamId);
       }
     });
   }
@@ -98,14 +94,8 @@ class _TeamsPageState extends State<TeamsPage> {
         .map((e) => e.key)
         .toList();
 
-    final markedTeams = _teams.entries
-        .where((e) => e.value['marked'] == true)
-        .map((e) => e.key)
-        .toList();
-
     await Future.wait([
       _prefs.setStringList(_selectedTeamsKey, selectedTeams),
-      _prefs.setStringList(_markedTeamsKey, markedTeams),
     ]);
   }
 
@@ -176,8 +166,7 @@ class _TeamsPageState extends State<TeamsPage> {
           final matchesSearch = _searchTerm.isEmpty ||
               team['teamName'].toString().toUpperCase().contains(_searchTerm.toUpperCase());
           final matchesSelected = !_showSelectedOnly || team['selected'] == true;
-          final matchesMarked = !_showMarkedOnly || team['marked'] == true;
-          return matchesSearch && matchesSelected && matchesMarked;
+          return matchesSearch && matchesSelected;
         })
     );
   }
@@ -223,15 +212,6 @@ class _TeamsPageState extends State<TeamsPage> {
                     Navigator.pop(context);
                   },
                 ),
-                CheckboxListTile(
-                  title: const Text('Show Marked Only'),
-                  value: _showMarkedOnly,
-                  activeColor: Colors.blueAccent,
-                  onChanged: (value) {
-                    setState(() => _showMarkedOnly = value ?? false);
-                    Navigator.pop(context);
-                  },
-                ),
               ],
             ),
             actions: [
@@ -239,7 +219,6 @@ class _TeamsPageState extends State<TeamsPage> {
                 onPressed: () {
                   setState(() {
                     _showSelectedOnly = false;
-                    _showMarkedOnly = false;
                   });
                   Navigator.pop(context);
                 },
@@ -384,6 +363,8 @@ class _TeamsPageState extends State<TeamsPage> {
       decoration: const InputDecoration(
         hintText: 'Search for a team',
         prefixIcon: Icon(Icons.search_rounded),
+        // Remove the underline
+        border: InputBorder.none,
       ),
       onChanged: (value) => setState(() => _searchTerm = value),
     );
@@ -401,7 +382,7 @@ class _TeamsPageState extends State<TeamsPage> {
             Text(
               _teams.isEmpty
                   ? 'No teams available.\nTap the refresh button to fetch teams.'
-                  : _showSelectedOnly || _showMarkedOnly
+                  : _showSelectedOnly
                     ? 'No teams match the selected filters.'
                     : 'No teams match the search term.',
               textAlign: TextAlign.center,
@@ -446,21 +427,6 @@ class _TeamsPageState extends State<TeamsPage> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-              ),
-              IconCheckbox(
-                iconChecked: Icons.star_rounded,
-                iconUnchecked: Icons.star_outline_rounded,
-                checkedColor: const Color(0xFFFFD700),
-                initialValue: team['marked'],
-                onChanged: (value) {
-                  setState(() {
-                    _teams[teamId]?['marked'] = value;
-                    if (value == true) {
-                      _teams[teamId]?['selected'] = true;
-                    }
-                  });
-                  _saveTeamStates();
-                },
               ),
             ],
           ),

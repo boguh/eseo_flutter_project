@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../utils/router.dart';
-import 'package:go_router/go_router.dart';
 
 class PersonalInfoRedirect extends StatelessWidget {
   const PersonalInfoRedirect({super.key});

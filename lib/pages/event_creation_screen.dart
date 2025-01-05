@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:googleapis/calendar/v3.dart' as cal;
 import '../services/calendar_client.dart';
 
 class EventCreationScreen extends StatefulWidget {
+  const EventCreationScreen({super.key});
+
   @override
-  _EventCreationScreenState createState() => _EventCreationScreenState();
+  State<EventCreationScreen> createState() => _EventCreationScreenState();
 }
 
 class _EventCreationScreenState extends State<EventCreationScreen> {
@@ -54,11 +54,11 @@ class _EventCreationScreenState extends State<EventCreationScreen> {
         );
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Événement créé avec succès')),
+          const SnackBar(content: Text('Événement créé avec succès')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Veuillez sélectionner la date et l\'heure')),
+          const SnackBar(content: Text('Veuillez sélectionner la date et l\'heure')),
         );
       }
     }
@@ -101,48 +101,48 @@ class _EventCreationScreenState extends State<EventCreationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Créer un événement')),
+      appBar: AppBar(title: const Text('Créer un événement')),
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           children: [
             TextFormField(
-              decoration: InputDecoration(labelText: 'Titre'),
+              decoration: const InputDecoration(labelText: 'Titre'),
               onSaved: (value) => currentTitle = value,
               validator: (value) => value!.isEmpty ? 'Entrez un titre' : null,
             ),
             TextFormField(
-              decoration: InputDecoration(labelText: 'Description'),
+              decoration: const InputDecoration(labelText: 'Description'),
               onSaved: (value) => currentDesc = value,
             ),
             TextFormField(
-              decoration: InputDecoration(labelText: 'Lieu'),
+              decoration: const InputDecoration(labelText: 'Lieu'),
               onSaved: (value) => currentLocation = value,
             ),
             ListTile(
               title: Text('Date de début: ${startDate != null ? startDate.toString() : 'Non sélectionnée'}'),
-              trailing: Icon(Icons.calendar_today),
+              trailing: const Icon(Icons.calendar_today),
               onTap: () => _selectDate(context, true),
             ),
             ListTile(
               title: Text('Heure de début: ${startTime != null ? startTime?.format(context) : 'Non sélectionnée'}'),
-              trailing: Icon(Icons.access_time),
+              trailing: const Icon(Icons.access_time),
               onTap: () => _selectTime(context, true),
             ),
             ListTile(
               title: Text('Date de fin: ${endDate != null ? endDate.toString() : 'Non sélectionnée'}'),
-              trailing: Icon(Icons.calendar_today),
+              trailing: const Icon(Icons.calendar_today),
               onTap: () => _selectDate(context, false),
             ),
             ListTile(
               title: Text('Heure de fin: ${endTime != null ? endTime?.format(context) : 'Non sélectionnée'}'),
-              trailing: Icon(Icons.access_time),
+              trailing: const Icon(Icons.access_time),
               onTap: () => _selectTime(context, false),
             ),
             ElevatedButton(
               onPressed: _submitEvent,
-              child: Text('Créer l\'événement'),
+              child: const Text('Créer l\'événement'),
             ),
           ],
         ),

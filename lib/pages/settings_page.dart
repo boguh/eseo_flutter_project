@@ -2,15 +2,11 @@ import '../widgets/google_auth_button.dart';
 import '../widgets/notifications_toggle.dart';
 import '../widgets/personal_information.dart';
 import '../widgets/team_list.dart';
-import '../widgets/google_auth_button.dart';
-import '../widgets/notifications_toggle.dart';
-import '../widgets/team_list.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../utils/router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/actions_menu.dart';
-import 'connexion_page.dart' show login; // Import the login function
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -124,7 +120,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: 'Preferences',
                 children: [
                   const NotificationToggle(),
-                   const GoogleAccountToggle(),
                   GestureDetector(
                     onTap: () {
                       // Redirection when tapping the entire widget

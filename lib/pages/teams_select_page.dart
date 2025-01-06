@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../services/teams_select_service.dart';
 import '../utils/router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/icon_checkbox.dart';
@@ -123,7 +124,7 @@ class _TeamsPageState extends State<TeamsPage> {
   Future<void> _initializePage() async {
     setState(() => _isFetching = true);
     try {
-      await _fetchTeams();
+      await fetchTeams(mounted,_teams);
       await _saveTeamsToPreferences();
     } catch (e) {
       if (mounted) {
@@ -141,35 +142,9 @@ class _TeamsPageState extends State<TeamsPage> {
     }
   }
 
-  /// Fetch teams from Firestore
-  Future<void> _fetchTeams() async {
-    final QuerySnapshot querySnapshot =
-    await FirebaseFirestore.instance.collection('equipes').get();
-    if (!mounted) return;
-    setState(() {
-      _teams.clear();
-      for (var doc in querySnapshot.docs) {
-        _teams[doc.id] = {
-          'teamName': doc['teamName'] as String,
-          'selected': false,
-          'marked': false,
-        };
-      }
-    });
-  }
 
-  /// Filter teams based on search term, selected state, and marked state
-  Map<String, Map<String, dynamic>> _getFilteredTeams() {
-    return Map.fromEntries(
-        _teams.entries.where((entry) {
-          final team = entry.value;
-          final matchesSearch = _searchTerm.isEmpty ||
-              team['teamName'].toString().toUpperCase().contains(_searchTerm.toUpperCase());
-          final matchesSelected = !_showSelectedOnly || team['selected'] == true;
-          return matchesSearch && matchesSelected;
-        })
-    );
-  }
+
+
 
   /// Build the widget
   @override
@@ -372,7 +347,7 @@ class _TeamsPageState extends State<TeamsPage> {
 
   /// Build the teams list widget
   Widget _buildTeamsList() {
-    final filteredTeams = _getFilteredTeams();
+    final filteredTeams = getFilteredTeams(_teams,_searchTerm,_showSelectedOnly);
 
     if (filteredTeams.isEmpty) {
       return Center(

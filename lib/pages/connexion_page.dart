@@ -38,17 +38,7 @@ Future<bool> login() async {
 
     final GoogleSignInAuthentication googleAuth = await googleUser
         .authentication;
-   /* final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
 
-    UserCredential userCredential = await FirebaseAuth.instance
-        .signInWithCredential(credential);
-    User? user = userCredential.user;
-    if (user == null) {
-      return false;
-    }*/
 
     final client = await googleSignIn.authenticatedClient();
     if (client == null) {

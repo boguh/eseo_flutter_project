@@ -23,7 +23,7 @@ class EventCard extends StatelessWidget {
       child: Container(
         width: double.infinity,
         height: 100.0,
-        margin: const EdgeInsets.only(bottom: 20.0),
+        margin: const EdgeInsets.only(bottom: 10.0),
         padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           color: Colors.white,

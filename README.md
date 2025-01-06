@@ -10,6 +10,7 @@
 - [Dependencies](#dependencies)
 
 ## Overview
+![Buni Logo](assets/images/buni_logo.svg)
 Buni is a mobile application for Android that allows basketball enthusiasts to track their favorite teams' matches on a weekly basis and sync them with their Google Calendar. The application pulls match data from the French Basketball Federation (FFBB) website and provides an intuitive interface for managing and following teams.
 
 ## Features
@@ -138,27 +139,3 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
 ```
-
-## Future Improvements
-1. Implementation of global state management
-2. Enhanced offline capabilities
-3. Additional calendar integration options
-4. Performance optimizations
-5. Extended team statistics
-6. Match notifications system
-
-## Getting Started
-
-### Prerequisites
-- Flutter SDK
-- Android Studio / VS Code
-- Firebase account
-- Google Cloud Platform account
-
-### Configuration
-1. Set up Firebase project
-2. Configure Google Calendar API
-3. Add required API keys and configurations
-4. Run `flutter pub get`
-5. Build and run the application
-

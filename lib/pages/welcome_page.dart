@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/event.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
+import '../services/matches_service.dart';
 import '../utils/router.dart';
 import '../widgets/calendar_widget.dart';
 import 'event_details_page.dart';
@@ -65,7 +66,8 @@ class _WelcomePageState extends State<WelcomePage> {
       selectedTeams = _prefs.getStringList(_selectedTeamsKey) ?? [];
       // We get the marked (favorites) teams from the stored teams
       favoriteTeams = _prefs.getStringList(_markedTeamsKey) ?? [];
-      await getSelectedTeamsMatches();
+      selectedTeamsEvents.clear();
+      selectedTeamsEvents=await getSelectedTeamsMatches(selectedTeams, _selectedWeek,mounted,selectedTeamsEvents);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
@@ -75,44 +77,7 @@ class _WelcomePageState extends State<WelcomePage> {
     }
   }
 
-  /// Get the week number from a date
-  int getWeekNumber(String date) {
-    DateFormat dateFormat = DateFormat('dd/MM/yyyy');
-    DateTime dateTime = dateFormat.parse(date);
-    int dayOfYear = int.parse(DateFormat('D').format(dateTime));
-    return ((dayOfYear - dateTime.weekday + 10) / 7).floor();
-  }
 
-  /// Fetch the matches for a selected team
-  Future<void> _fetchSelectedTeamMatches(String teamName, int selectedWeek) async {
-    print('Fetching matches for $teamName');
-    final QuerySnapshot querySnapshot =
-    await FirebaseFirestore.instance.collection('equipes').get();
-    if (!mounted) return;
-    setState(() {
-      for (var doc in querySnapshot.docs) {
-        if (doc.id == teamName) {
-          for (Map<String, dynamic> match in doc['matches']) {
-            String date = match['date'];
-            if (getWeekNumber(date) == selectedWeek) {
-              print('Match: $match');
-              Event event = Event.fromMap(match);
-              selectedTeamsEvents.add(event);
-            }
-          }
-        }
-      }
-    });
-  }
-
-  /// Fetch teams from Firestore
-  Future<void> getSelectedTeamsMatches() async {
-    print('Fetching matches for selected teams');
-    selectedTeamsEvents.clear();
-    for (var team in selectedTeams) {
-      await _fetchSelectedTeamMatches(team, _selectedWeek);
-    }
-  }
 
   /// Build the widget
   @override
@@ -190,7 +155,8 @@ class _WelcomePageState extends State<WelcomePage> {
               setState(() {
                 _isLoading = true;
               });
-              await getSelectedTeamsMatches();
+              selectedTeamsEvents.clear();
+              selectedTeamsEvents=await getSelectedTeamsMatches(selectedTeams, _selectedWeek,mounted,selectedTeamsEvents);
               setState(() {
                 _isLoading = false;
               });
@@ -201,7 +167,8 @@ class _WelcomePageState extends State<WelcomePage> {
                 _selectedWeek = week;
                 debugPrint('Week: $week');
               });
-              await getSelectedTeamsMatches();
+              selectedTeamsEvents.clear();
+              selectedTeamsEvents=await getSelectedTeamsMatches(selectedTeams, _selectedWeek,mounted,selectedTeamsEvents);
               setState(() {
                 _isLoading = false;
               });

@@ -10,7 +10,7 @@
 - [Dependencies](#dependencies)
 
 ## Overview
-![Buni Logo](assets/images/buni_logo.svg)
+![Buni Logo](assets/images/buni_logo.svg)  
 Buni is a mobile application for Android that allows basketball enthusiasts to track their favorite teams' matches on a weekly basis and sync them with their Google Calendar. The application pulls match data from the French Basketball Federation (FFBB) website and provides an intuitive interface for managing and following teams.
 
 ## Features

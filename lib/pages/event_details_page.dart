@@ -1,4 +1,4 @@
-import 'package:app/widgets/google_auth_button.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -14,7 +14,7 @@ class EventDetailsPage extends StatelessWidget {
   const EventDetailsPage({super.key, required this.event});
 
   Future<void> _createEvent(BuildContext context) async {
-  final  accountCubit = context.read<AccountCubit>();
+
     // Build the start date time from e.g. date = 'dd/mm/yyyy' and time = 'hh:mm'
     List<String> dateParts = event.date.split('/');
     List<String> timeParts = event.time.split(':');
@@ -130,15 +130,22 @@ class EventDetailsPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.home_rounded, size: 30),
+                const Icon(Icons.home_outlined, size: 30),
                 Text(_formatTeamName(event.homeTeam), style: const TextStyle(fontSize: 18)),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.flight_rounded, size: 30),
+                const Icon(Icons.flight_outlined, size: 30),
                 Text(_formatTeamName(event.visitorTeam), style: const TextStyle(fontSize: 18)),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Icon(Icons.emoji_events_outlined, size: 30),
+                Text(_formatTeamName(event.championnat), style: const TextStyle(fontSize: 18)),
               ],
             ),
           ],
@@ -150,15 +157,25 @@ class EventDetailsPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.date_range_rounded, size: 30),
-                Text(event.date, style: const TextStyle(fontSize: 18)),
+                const Icon(Icons.date_range_outlined, size: 30),
+                Text(
+                    event.date,
+                    style: const TextStyle(
+                        fontSize: 18
+                    )
+                ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.access_time_rounded, size: 30),
-                Text(event.time, style: const TextStyle(fontSize: 18)),
+                const Icon(Icons.access_time_outlined, size: 30),
+                Text(
+                    event.time,
+                    style: const TextStyle(
+                        fontSize: 18
+                    )
+                ),
               ],
             ),
           ],

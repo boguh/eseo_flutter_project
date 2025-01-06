@@ -25,6 +25,7 @@ Future<List<Event>> _fetchSelectedTeamMatches(String teamName, int selectedWeek,
           if (getWeekNumber(date) == selectedWeek) {
             Event event = Event.fromMap(match);
             event.setIsAwayTeam(doc['teamName'].contains(event.visitorTeam.split(' ')[0]));
+            event.setChampionnat(doc['championnat']);
             selectedTeamsEvents.add(event);
           }
         }

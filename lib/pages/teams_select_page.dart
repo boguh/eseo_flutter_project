@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -137,6 +136,7 @@ class _TeamsPageState extends State<TeamsPage> {
     }
   }
 
+  /// Build the widget
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -376,7 +376,6 @@ class _TeamsPageState extends State<TeamsPage> {
       itemBuilder: (context, index) {
         final team = filteredTeams.values.elementAt(index);
         final teamId = filteredTeams.keys.elementAt(index);
-
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
@@ -406,8 +405,6 @@ class _TeamsPageState extends State<TeamsPage> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-
-
                     Text(
                       team['championnat'],
                       style: const TextStyle(

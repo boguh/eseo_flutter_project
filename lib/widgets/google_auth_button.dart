@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../pages/connexion_page.dart';
-import '../pages/welcome_page.dart';
+
 import '../services/account_cubit.dart';
 
 
@@ -14,7 +14,7 @@ class GoogleAccountToggle extends StatefulWidget {
 }
 
 class _GoogleAccountToggleState extends State<GoogleAccountToggle> {
-   // Détermine si l'utilisateur est authentifié ou non
+  // Détermine si l'utilisateur est authentifié ou non
 
   // Méthode pour simuler l'authentification
   void _toggleAuthentication() {

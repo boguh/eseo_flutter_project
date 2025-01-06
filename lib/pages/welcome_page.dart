@@ -99,7 +99,9 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget _buildCustomAppBar() {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+      // Margin Top, Left and Right : 20.0
+      // Margin Bottom : 10.0
+      margin: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
       decoration: BoxDecoration(
         color: Colors.blueAccent,
         borderRadius: BorderRadius.circular(20),

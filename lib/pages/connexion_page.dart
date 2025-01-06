@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/calendar/v3.dart' as cal;
 import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
 
+import '../services/account_cubit.dart';
 import '../services/calendar_client.dart';
 import '../widgets/google_auth_button.dart';
 void logout() async {
@@ -17,7 +18,7 @@ void logout() async {
   );
 
   await googleSignIn.signOut();
-  print('DEBUGGGG: Google user signed out');
+
 }
 Future<bool> login() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,9 +43,8 @@ Future<bool> login() async {
       return false;
     } else {
       CalendarClient.calendar = cal.CalendarApi(client);
-      userEmail = googleUser.email;
-      userName = googleUser.displayName!;
-      isAuthenticated = true;
+
+
       return true;
     }
   } catch (e) {

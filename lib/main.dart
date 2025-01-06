@@ -1,13 +1,25 @@
+import 'package:app/services/account_cubit.dart';
+import 'package:app/services/teams_qubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../utils/router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => AccountCubit()),
+        BlocProvider(create: (context) => TeamsCubit()),
+      ],
+
+    child: MyApp(),
+  ),);
 }
 
 class MyApp extends StatelessWidget {

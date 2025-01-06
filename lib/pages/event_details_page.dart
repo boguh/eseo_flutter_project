@@ -1,8 +1,10 @@
 import 'package:app/widgets/google_auth_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/event.dart';
+import '../services/account_cubit.dart';
 import '../services/calendar_client.dart';
 import '../widgets/actions_menu.dart';
 
@@ -12,7 +14,7 @@ class EventDetailsPage extends StatelessWidget {
   const EventDetailsPage({super.key, required this.event});
 
   Future<void> _createEvent(BuildContext context) async {
-
+  final  accountCubit = context.read<AccountCubit>();
     // Build the start date time from e.g. date = 'dd/mm/yyyy' and time = 'hh:mm'
     List<String> dateParts = event.date.split('/');
     List<String> timeParts = event.time.split(':');
@@ -42,7 +44,8 @@ class EventDetailsPage extends StatelessWidget {
     );
   }@override
   Widget build(BuildContext context) {
-    bool showButton = isAuthenticated; // Votre condition ici.
+    final accountCubit = context.read<AccountCubit>();
+    bool showButton = accountCubit.isAuthenticated; // Votre condition ici.
 
     return Scaffold(
       appBar: AppBar(

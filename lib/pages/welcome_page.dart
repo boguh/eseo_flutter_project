@@ -1,66 +1,46 @@
-import 'package:app/widgets/event_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../models/event.dart';
 import '../services/matches_service.dart';
+import '../services/teams_qubit.dart';
 import '../utils/router.dart';
 import '../widgets/calendar_widget.dart';
+import '../widgets/event_card.dart';
 
-String userEmail = '';
-String userName = '';
 
-/// The [WelcomePage] widget displays the main page of the application
-/// It contains a calendar widget and a list of events
-/// The events are fetched from the database based on the selected week
-/// The user can navigate to the settings page by clicking on the settings icon
-/// The user can navigate to the event details page by clicking on an event
 class WelcomePage extends StatefulWidget {
-  /// Creates a [WelcomePage] widget
   const WelcomePage({super.key});
 
-  /// Creates the mutable state for this widget
   @override
   State<WelcomePage> createState() => _WelcomePageState();
 }
-
-/// Get the current week number
 int getCurrentWeekNumber() {
   DateTime now = DateTime.now();
   int dayOfYear = int.parse(DateFormat("D").format(now));
   return ((dayOfYear - now.weekday + 10) / 7).floor();
 }
-
-/// The private state class for a [WelcomePage] widget
 class _WelcomePageState extends State<WelcomePage> {
-  /// The list of events to display
   bool _isLoading = false;
+
   int _selectedWeek = getCurrentWeekNumber();
-  List<String> selectedTeams = [];
   List<Event> selectedTeamsEvents = [];
 
-  /// The list of events to display
-  static const String _selectedTeamsKey = 'selected_teams';
-  late SharedPreferences _prefs;
-
-  /// Initialize the state
   @override
   void initState() {
     super.initState();
-    _initializePage();
+    context.read<TeamsCubit>().loadPreferences().then((_) {
+      _initializePage();
+    });
   }
 
-  /// Initialize the page
   Future<void> _initializePage() async {
     setState(() => _isLoading = true);
     try {
-      // First we get the shared preferences instance
-      _prefs = await SharedPreferences.getInstance();
-      // We get the selected teams from the stored teams
-      selectedTeams = _prefs.getStringList(_selectedTeamsKey) ?? [];
+      final selectedTeams = context.read<TeamsCubit>().selectedTeams;
       selectedTeamsEvents.clear();
-      selectedTeamsEvents = await getSelectedTeamsMatches(selectedTeams, _selectedWeek,mounted,selectedTeamsEvents);
+      selectedTeamsEvents = await getSelectedTeamsMatches(selectedTeams, _selectedWeek, mounted, selectedTeamsEvents);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
@@ -70,9 +50,6 @@ class _WelcomePageState extends State<WelcomePage> {
     }
   }
 
-
-
-  /// Build the widget
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,11 +57,11 @@ class _WelcomePageState extends State<WelcomePage> {
       body: SafeArea(
         child: Column(
           children: [
-            _buildCustomAppBar(), // L'appbar est toujours visible
+            _buildCustomAppBar(),
             Expanded(
               child: _isLoading
-                  ? const Center(child: CircularProgressIndicator()) // Affiche uniquement un loader pour la liste des événements
-                  : _buildEventList(), // Affiche la liste des événements
+                  ? const Center(child: CircularProgressIndicator())
+                  : _buildEventList(),
             ),
           ],
         ),
@@ -92,8 +69,8 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
-  /// Build the list of events
   Widget _buildEventList() {
+    final selectedTeams = context.watch<TeamsCubit>().selectedTeams;
     if (selectedTeamsEvents.isNotEmpty) {
       return SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -119,7 +96,6 @@ class _WelcomePageState extends State<WelcomePage> {
     }
   }
 
-  /// Build the custom app bar
   Widget _buildCustomAppBar() {
     return Container(
       width: double.infinity,
@@ -149,7 +125,12 @@ class _WelcomePageState extends State<WelcomePage> {
                 _isLoading = true;
               });
               selectedTeamsEvents.clear();
-              selectedTeamsEvents=await getSelectedTeamsMatches(selectedTeams, _selectedWeek,mounted, selectedTeamsEvents);
+              selectedTeamsEvents = await getSelectedTeamsMatches(
+                context.read<TeamsCubit>().selectedTeams,
+                _selectedWeek,
+                mounted,
+                selectedTeamsEvents,
+              );
               setState(() {
                 _isLoading = false;
               });
@@ -161,7 +142,12 @@ class _WelcomePageState extends State<WelcomePage> {
                 debugPrint('Week: $week');
               });
               selectedTeamsEvents.clear();
-              selectedTeamsEvents=await getSelectedTeamsMatches(selectedTeams, _selectedWeek,mounted, selectedTeamsEvents);
+              selectedTeamsEvents = await getSelectedTeamsMatches(
+                context.read<TeamsCubit>().selectedTeams,
+                _selectedWeek,
+                mounted,
+                selectedTeamsEvents,
+              );
               setState(() {
                 _isLoading = false;
               });

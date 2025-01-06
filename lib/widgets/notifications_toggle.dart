@@ -38,29 +38,10 @@ class _NotificationToggleState extends State<NotificationToggle> {
               ),
             ),
             const SizedBox(width: 10),
-            const Text(
-              'Notifications',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Colors.black,
-              ),
-            ),
+
           ],
         ),
-        Switch(
-          value: _isNotificationEnabled, // Toggle switch state
-          onChanged: (bool value) {
-            setState(() {
-              _isNotificationEnabled = value; // Update state
-            });
-          },
-          activeColor: Colors.white, // Color when the switch is ON
-          inactiveThumbColor: Colors.white, // Color of the thumb when OFF
-          inactiveTrackColor: Colors.black.withOpacity(0.1), // Track color when OFF
-          activeTrackColor: Colors.blueAccent, // Track color when ON
-          trackOutlineWidth: const WidgetStatePropertyAll(0.0),
-        ),
+
       ],
     );
   }

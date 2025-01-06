@@ -1,3 +1,4 @@
+import 'package:app/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
@@ -19,13 +20,14 @@ class _CalendarState extends State<Calendar> {
 
   // State variables
   String _selectedMonth = Month.values.firstWhere((month) => month.value == DateTime.now().month).name;
-  int _selectedWeek = 0;
+  int _selectedWeek = getCurrentWeekNumber();
   List<int> _weeks = [];
 
   /// Initialize the state variables
   @override
   void initState() {
     super.initState();
+    _selectedWeek = getCurrentWeekNumber();
     _updateWeeks();
   }
 
@@ -57,8 +59,7 @@ class _CalendarState extends State<Calendar> {
     final weeks = getWeeks(now.year, selectedMonth.value);
 
     if (now.month == selectedMonth.value) {
-      final week = weeks.firstWhere((week) => now.dayOfYear <= week * 7);
-      _updateWeek(week);
+     _updateWeek(getCurrentWeekNumber());
     } else {
       _updateWeek(weeks.first);
     }
@@ -140,7 +141,7 @@ class _CalendarState extends State<Calendar> {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
           padding: const EdgeInsets.symmetric(
-              vertical: 16.0, horizontal: 16.0),
+              vertical: 12.0, horizontal: 12.0),
           decoration: BoxDecoration(
             color:
             _selectedWeek != week ? Colors.blueAccent : Colors.white,
@@ -177,6 +178,7 @@ class _CalendarState extends State<Calendar> {
           .toList(),
     );
   }
+
 }
 
 /// Extension to get the day of the year from a DateTime object

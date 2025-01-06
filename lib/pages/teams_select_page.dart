@@ -151,6 +151,7 @@ class _TeamsPageState extends State<TeamsPage> {
       for (var doc in querySnapshot.docs) {
         _teams[doc.id] = {
           'teamName': doc['teamName'] as String,
+          'championnat': doc['championnat'] as String,
           'selected': false,
           'marked': false,
         };
@@ -223,11 +224,11 @@ class _TeamsPageState extends State<TeamsPage> {
                   Navigator.pop(context);
                 },
                 child: const Text(
-                    'Clear Filters',
-                    style: TextStyle(
-                      color: Colors.blueAccent,
-                    ),
+                  'Clear Filters',
+                  style: TextStyle(
+                    color: Colors.blueAccent,
                   ),
+                ),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -243,14 +244,14 @@ class _TeamsPageState extends State<TeamsPage> {
         );
       },
       label: const Text(
-          'Filter',
-          style: TextStyle(
-            color: Colors.white,
-          ),
+        'Filter',
+        style: TextStyle(
+          color: Colors.white,
+        ),
       ),
       icon: const Icon(
-          Icons.filter_list,
-          color: Colors.white,
+        Icons.filter_list,
+        color: Colors.white,
       ),
       backgroundColor: Colors.blueAccent,
     );
@@ -383,8 +384,8 @@ class _TeamsPageState extends State<TeamsPage> {
               _teams.isEmpty
                   ? 'No teams available.\nTap the refresh button to fetch teams.'
                   : _showSelectedOnly
-                    ? 'No teams match the selected filters.'
-                    : 'No teams match the search term.',
+                  ? 'No teams match the selected filters.'
+                  : 'No teams match the search term.',
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 16,
@@ -405,7 +406,6 @@ class _TeamsPageState extends State<TeamsPage> {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconCheckbox(
                 iconChecked: Icons.indeterminate_check_box,
@@ -418,14 +418,29 @@ class _TeamsPageState extends State<TeamsPage> {
                   _saveTeamStates();
                 },
               ),
+              const SizedBox(width: 12), // Add spacing between checkbox and text
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Text(
-                    team['teamName'],
-                    style: const TextStyle(fontSize: 15),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _formatTeamName(team),
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      team['championnat'],
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -433,6 +448,10 @@ class _TeamsPageState extends State<TeamsPage> {
         );
       },
     );
+  }
+
+  String _formatTeamName(Map<String, dynamic> team) {
+    return team['teamName'].split(' - ')[1];
   }
 
   @override

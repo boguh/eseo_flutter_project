@@ -153,7 +153,6 @@ class _TeamsPageState extends State<TeamsPage> {
           'teamName': doc['teamName'] as String,
           'championnat': doc['championnat'] as String,
           'selected': false,
-          'marked': false,
         };
       }
     });

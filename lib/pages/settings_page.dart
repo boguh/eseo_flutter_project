@@ -45,64 +45,74 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 100,
-        centerTitle: true,
-        title: Text(
-          'Settings',
-          style: GoogleFonts.roboto(
-            fontWeight: FontWeight.w600,
-            fontSize: 25,
+    return WillPopScope(
+      onWillPop: () async {
+        // Gestion explicite du retour arrière
+        if (GoRouter.of(context).canPop()) {
+          context.pop();
+        } else {
+          context.go(RouteNames.welcome.path); // Page fallback
+        }
+        return false; // Empêche le comportement par défaut
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 100,
+          centerTitle: true,
+          title: Text(
+            'Settings',
+            style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w600,
+              fontSize: 25,
+            ),
+          ),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              size: 35,
+            ),
+            onPressed: () {
+              if (GoRouter.of(context).canPop()) {
+                context.pop();
+              } else {
+                context.go(RouteNames.welcome.path); // Fallback navigation
+              }
+            },
+            tooltip: 'Go back',
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_rounded,
-            size: 35,
-          ),
-          onPressed: () {
-            if (GoRouter.of(context).canPop()) {
-              context.pop();
-            } else {
-              context.go(RouteNames.welcome.path); // Fallback navigation
-            }
-          },
-          tooltip: 'Go back',
-        ),
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Account settings
-              const ActionsMenu(
-                title: 'Account',
-                children: [
-                  GoogleAccountToggle(),
-                ],
-              ),
-              // Add some space between sections
-              const SizedBox(height: 30),
-              // Third section : Preferences
-              ActionsMenu(
-                title: 'Preferences',
-                children: [
-
-                  GestureDetector(
-                    onTap: () {
-                      // Redirection when tapping the entire widget
-                      context.go(RouteNames.teams.path);
-                    },
-                    child: const TeamsListRedirect(),
-                  ),
-                ],
-              ),
-            ],
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Account settings
+                const ActionsMenu(
+                  title: 'Account',
+                  children: [
+                    GoogleAccountToggle(),
+                  ],
+                ),
+                // Add some space between sections
+                const SizedBox(height: 30),
+                // Third section: Preferences
+                ActionsMenu(
+                  title: 'Preferences',
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        // Redirection when tapping the entire widget
+                        context.go(RouteNames.teams.path);
+                      },
+                      child: const TeamsListRedirect(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -10,6 +10,7 @@ class Event {
   final String time;
   final String homeTeam;
   final String visitorTeam;
+  late String championnat = '';
   late bool isAwayTeam = false;
 
   /// Constructor for the [Event] class
@@ -34,5 +35,10 @@ class Event {
   /// Sets the [isAwayTeam] property
   void setIsAwayTeam(bool bool) {
     isAwayTeam = bool;
+  }
+
+  /// Sets the [championnat] property
+  void setChampionnat(String text) {
+    championnat = text;
   }
 }

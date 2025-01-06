@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -135,36 +134,6 @@ class _TeamsPageState extends State<TeamsPage> {
         setState(() => _isFetching = false);
       }
     }
-  }
-
-  /// Fetch teams from Firestore
-  Future<void> _fetchTeams() async {
-    final QuerySnapshot querySnapshot =
-    await FirebaseFirestore.instance.collection('equipes').get();
-    if (!mounted) return;
-    setState(() {
-      _teams.clear();
-      for (var doc in querySnapshot.docs) {
-        _teams[doc.id] = {
-          'teamName': doc['teamName'] as String,
-          'championnat': doc['championnat'] as String,
-          'selected': false,
-        };
-      }
-    });
-  }
-
-  /// Filter teams based on search term, selected state, and marked state
-  Map<String, Map<String, dynamic>> _getFilteredTeams() {
-    return Map.fromEntries(
-        _teams.entries.where((entry) {
-          final team = entry.value;
-          final matchesSearch = _searchTerm.isEmpty ||
-              team['teamName'].toString().toUpperCase().contains(_searchTerm.toUpperCase());
-          final matchesSelected = !_showSelectedOnly || team['selected'] == true;
-          return matchesSearch && matchesSelected;
-        })
-    );
   }
 
   /// Build the widget
@@ -407,7 +376,6 @@ class _TeamsPageState extends State<TeamsPage> {
       itemBuilder: (context, index) {
         final team = filteredTeams.values.elementAt(index);
         final teamId = filteredTeams.keys.elementAt(index);
-
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
@@ -437,8 +405,6 @@ class _TeamsPageState extends State<TeamsPage> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-
-
                     Text(
                       team['championnat'],
                       style: const TextStyle(

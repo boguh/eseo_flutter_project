@@ -9,8 +9,6 @@ Map<String, Map<String, dynamic>> getFilteredTeams(teams,searchTerm,showSelected
             team['teamName'].toString().toUpperCase().contains(searchTerm.toUpperCase());
         final matchesSelected = !showSelectedOnly || team['selected'] == true;
         return matchesSearch && matchesSelected;
-
-
       })
   );
 }
@@ -20,7 +18,6 @@ Future<Map<String, Map<String, dynamic>>> fetchTeams(mounted,teams) async {
   await FirebaseFirestore.instance.collection('equipes').get();
  // if (!mounted) return teams;
   teams.clear();
-  print ('teams');
     for (var doc in querySnapshot.docs) {
       teams[doc.id] = {
         'teamName': doc['teamName'] as String,
@@ -29,7 +26,6 @@ Future<Map<String, Map<String, dynamic>>> fetchTeams(mounted,teams) async {
         'marked': false,
       };
     }
-    print ('teams: $teams');
 return teams;
 }
 

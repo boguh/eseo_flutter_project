@@ -60,7 +60,7 @@ class _WelcomePageState extends State<WelcomePage> {
       // We get the selected teams from the stored teams
       selectedTeams = _prefs.getStringList(_selectedTeamsKey) ?? [];
       selectedTeamsEvents.clear();
-      selectedTeamsEvents = await getSelectedTeamsMatches(selectedTeams, _selectedWeek,mounted,selectedTeamsEvents);
+      selectedTeamsEvents = await getSelectedTeamsMatches(selectedTeams, _selectedWeek, mounted, selectedTeamsEvents);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),

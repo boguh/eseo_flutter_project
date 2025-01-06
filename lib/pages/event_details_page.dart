@@ -127,15 +127,22 @@ class EventDetailsPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.home_rounded, size: 30),
+                const Icon(Icons.home_outlined, size: 30),
                 Text(_formatTeamName(event.homeTeam), style: const TextStyle(fontSize: 18)),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.flight_rounded, size: 30),
+                const Icon(Icons.flight_outlined, size: 30),
                 Text(_formatTeamName(event.visitorTeam), style: const TextStyle(fontSize: 18)),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Icon(Icons.emoji_events_outlined, size: 30),
+                Text(_formatTeamName(event.championnat), style: const TextStyle(fontSize: 18)),
               ],
             ),
           ],
@@ -147,15 +154,25 @@ class EventDetailsPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.date_range_rounded, size: 30),
-                Text(event.date, style: const TextStyle(fontSize: 18)),
+                const Icon(Icons.date_range_outlined, size: 30),
+                Text(
+                    event.date,
+                    style: const TextStyle(
+                        fontSize: 18
+                    )
+                ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.access_time_rounded, size: 30),
-                Text(event.time, style: const TextStyle(fontSize: 18)),
+                const Icon(Icons.access_time_outlined, size: 30),
+                Text(
+                    event.time,
+                    style: const TextStyle(
+                        fontSize: 18
+                    )
+                ),
               ],
             ),
           ],

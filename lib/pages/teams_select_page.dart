@@ -8,59 +8,31 @@ import '../utils/router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/icon_checkbox.dart';
 
-/// Page for selecting teams
-/// Here are the coded features :
-///   - Fetch teams from Firestore
-///   - Select a team
-///   - Mark a team as favorite
-///   - Filter by selected and/or marked teams
-///   - Search for a team
-///   - Refresh teams
-///   - Save selected and marked teams to SharedPreferences
-///   - Display a list of teams
-///   - Show a loading indicator while fetching teams
-///   - Show a snackbar on the status of fetching teams
 class TeamsPage extends StatefulWidget {
-
-  /// Constructor for the [TeamsPage] widget
   const TeamsPage({super.key});
 
-  /// Create a state for the [TeamsPage] widget
   @override
   State<TeamsPage> createState() => _TeamsPageState();
 }
 
-/// State class for the [TeamsPage] widget
-/// This class contains the state for the [TeamsPage] widget
-/// and implements the build method
-/// The state class also contains methods for fetching teams,
-/// selecting all teams, marking all teams, filtering teams,
-/// searching for teams, and saving team states to SharedPreferences
-/// The state class also initializes the page and loads teams from Firestore
 class _TeamsPageState extends State<TeamsPage> {
+  bool _isInitialLoading = true;
+  bool _isFetching = false;
+  String _searchTerm = '';
+  final Map<String, Map<String, dynamic>> _teams = {};
+  bool _showSelectedOnly = false;
 
-  /// State variables
-  bool _isInitialLoading = true; // Initial loading state
-  bool _isFetching = false; // Fetching teams state
-  String _searchTerm = ''; // Search term
-  final Map<String, Map<String, dynamic>> _teams = {}; // Teams data
+  static const String _teamsPrefsKey = 'stored_teams';
+  static const String _selectedTeamsKey = 'selected_teams';
 
-  bool _showSelectedOnly = false; // Show selected teams only
+  late SharedPreferences _prefs;
 
-  /// Keys used for storing data in SharedPreferences
-  static const String _teamsPrefsKey = 'stored_teams'; // Key for storing teams
-  static const String _selectedTeamsKey = 'selected_teams'; // Key for storing selected teams
-
-  late SharedPreferences _prefs; // SharedPreferences instance
-
-  /// Initialize the state of the widget
   @override
   void initState() {
     super.initState();
     _initializePreferences();
   }
 
-  /// Initialize the SharedPreferences instance and load stored teams
   Future<void> _initializePreferences() async {
     _prefs = await SharedPreferences.getInstance();
     await Future.wait([
@@ -77,7 +49,6 @@ class _TeamsPageState extends State<TeamsPage> {
     }
   }
 
-  /// Load the selected and marked states of teams from SharedPreferences
   Future<void> _loadTeamStates() async {
     final selectedTeams = _prefs.getStringList(_selectedTeamsKey) ?? [];
 
@@ -88,7 +59,6 @@ class _TeamsPageState extends State<TeamsPage> {
     });
   }
 
-  /// Save the selected and marked states of teams to SharedPreferences
   Future<void> _saveTeamStates() async {
     final selectedTeams = _teams.entries
         .where((e) => e.value['selected'] == true)
@@ -100,7 +70,6 @@ class _TeamsPageState extends State<TeamsPage> {
     ]);
   }
 
-  /// Load stored teams from SharedPreferences
   Future<void> _loadStoredTeams() async {
     final String? storedTeams = _prefs.getString(_teamsPrefsKey);
     if (storedTeams != null) {
@@ -114,17 +83,15 @@ class _TeamsPageState extends State<TeamsPage> {
     }
   }
 
-  /// Save teams to SharedPreferences
   Future<void> _saveTeamsToPreferences() async {
     final String encodedTeams = json.encode(_teams);
     await _prefs.setString(_teamsPrefsKey, encodedTeams);
   }
 
-  /// Initialize the page by fetching teams from Firestore
   Future<void> _initializePage() async {
     setState(() => _isFetching = true);
     try {
-      await fetchTeams(mounted,_teams);
+      await fetchTeams(mounted, _teams);
       await _saveTeamsToPreferences();
     } catch (e) {
       if (mounted) {
@@ -142,32 +109,36 @@ class _TeamsPageState extends State<TeamsPage> {
     }
   }
 
-
-
-
-
-  /// Build the widget
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(context),
-      floatingActionButton: _buildFilterFAB(),
-      body: _isInitialLoading
-          ? const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text('Loading teams...'),
-          ],
-        ),
-      )
-          : _buildBody(),
+    return WillPopScope(
+      onWillPop: () async {
+        if (GoRouter.of(context).canPop()) {
+          context.pop();
+        } else {
+          context.go(RouteNames.settings.path);
+        }
+        return false;
+      },
+      child: Scaffold(
+        appBar: _buildAppBar(context),
+        floatingActionButton: _buildFilterFAB(),
+        body: _isInitialLoading
+            ? const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Loading teams...'),
+            ],
+          ),
+        )
+            : _buildBody(),
+      ),
     );
   }
 
-  /// Widget for the filter FAB
   Widget _buildFilterFAB() {
     return FloatingActionButton.extended(
       onPressed: () {
@@ -198,11 +169,11 @@ class _TeamsPageState extends State<TeamsPage> {
                   Navigator.pop(context);
                 },
                 child: const Text(
-                    'Clear Filters',
-                    style: TextStyle(
-                      color: Colors.blueAccent,
-                    ),
+                  'Clear Filters',
+                  style: TextStyle(
+                    color: Colors.blueAccent,
                   ),
+                ),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -218,20 +189,19 @@ class _TeamsPageState extends State<TeamsPage> {
         );
       },
       label: const Text(
-          'Filter',
-          style: TextStyle(
-            color: Colors.white,
-          ),
+        'Filter',
+        style: TextStyle(
+          color: Colors.white,
+        ),
       ),
       icon: const Icon(
-          Icons.filter_list,
-          color: Colors.white,
+        Icons.filter_list,
+        color: Colors.white,
       ),
       backgroundColor: Colors.blueAccent,
     );
   }
 
-  /// Build the app bar
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
       toolbarHeight: 100,
@@ -257,7 +227,6 @@ class _TeamsPageState extends State<TeamsPage> {
     );
   }
 
-  /// Build the body of the widget
   Widget _buildBody() {
     return SafeArea(
       child: Padding(
@@ -289,7 +258,6 @@ class _TeamsPageState extends State<TeamsPage> {
     );
   }
 
-  /// Build the add team button widget
   Widget _buildAddTeamButton() {
     return SizedBox(
       width: double.infinity,
@@ -332,22 +300,19 @@ class _TeamsPageState extends State<TeamsPage> {
     );
   }
 
-  /// Build the search bar widget
   Widget _buildSearchBar() {
     return TextField(
       decoration: const InputDecoration(
         hintText: 'Search for a team',
         prefixIcon: Icon(Icons.search_rounded),
-        // Remove the underline
         border: InputBorder.none,
       ),
       onChanged: (value) => setState(() => _searchTerm = value),
     );
   }
 
-  /// Build the teams list widget
   Widget _buildTeamsList() {
-    final filteredTeams = getFilteredTeams(_teams,_searchTerm,_showSelectedOnly);
+    final filteredTeams = getFilteredTeams(_teams, _searchTerm, _showSelectedOnly);
 
     if (filteredTeams.isEmpty) {
       return Center(
@@ -358,8 +323,8 @@ class _TeamsPageState extends State<TeamsPage> {
               _teams.isEmpty
                   ? 'No teams available.\nTap the refresh button to fetch teams.'
                   : _showSelectedOnly
-                    ? 'No teams match the selected filters.'
-                    : 'No teams match the search term.',
+                  ? 'No teams match the selected filters.'
+                  : 'No teams match the search term.',
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 16,

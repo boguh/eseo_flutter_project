@@ -3,6 +3,7 @@
 ## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
+- [Technical Requirements](#technical-requirements)
 - [Technical Architecture](#technical-architecture)
 - [Screens](#screens)
 - [Data Persistence](#data-persistence)
@@ -10,7 +11,6 @@
 - [Dependencies](#dependencies)
 
 ## Overview
-![Buni Logo](assets/images/buni_logo.svg)  
 Buni is a mobile application for Android that allows basketball enthusiasts to track their favorite teams' matches on a weekly basis and sync them with their Google Calendar. The application pulls match data from the French Basketball Federation (FFBB) website and provides an intuitive interface for managing and following teams.
 
 ## Features
@@ -21,6 +21,21 @@ Buni is a mobile application for Android that allows basketball enthusiasts to t
 - User profile management
 - Team filtering and search
 - Persistent data storage
+
+## Technical Requirements
+
+### Development Environment
+- **Flutter Version**: 3.24.5 (channel stable)
+- **Flutter Framework**: revision dec2ee5c1f (2024-11-13)
+- **Flutter Engine**: revision a18df97ca5
+- **Dart Version**: 3.5.4
+- **DevTools**: 2.37.3
+
+### Platform Requirements
+- Android Studio / VS Code
+- Firebase account
+- Google Cloud Platform account
+- Git (for version control)
 
 ## Technical Architecture
 
@@ -82,21 +97,21 @@ Buni is a mobile application for Android that allows basketball enthusiasts to t
 
 ### Local Storage
 - **SharedPreferences**:
-    - Stores user team selections
-    - Caches team data for offline access
-    - Maintains user preferences
+  - Stores user team selections
+  - Caches team data for offline access
+  - Maintains user preferences
 
 ## Authentication
 
 ### Google Sign-In Implementation
 - Integrated through `google_sign_in` package
 - Scopes:
-    - Email access
-    - Calendar API access
+  - Email access
+  - Calendar API access
 - Features:
-    - Sign in/out functionality
-    - Token management
-    - Calendar API authorization
+  - Sign in/out functionality
+  - Token management
+  - Calendar API authorization
 
 ## Dependencies
 
@@ -139,3 +154,26 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
 ```
+
+## Future Improvements
+1. Implementation of global state management
+2. Enhanced offline capabilities
+3. Additional calendar integration options
+4. Performance optimizations
+5. Extended team statistics
+6. Match notifications system
+
+## Getting Started
+
+### Prerequisites
+- Flutter SDK (version 3.24.5 or higher)
+- Android Studio / VS Code
+- Firebase account
+- Google Cloud Platform account
+
+### Configuration
+1. Set up Firebase project
+2. Configure Google Calendar API
+3. Add required API keys and configurations
+4. Run `flutter pub get`
+5. Build and run the application

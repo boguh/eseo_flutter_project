@@ -142,7 +142,7 @@ class _CalendarState extends State<Calendar> {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
           padding: const EdgeInsets.symmetric(
-              vertical: 16.0, horizontal: 16.0),
+              vertical: 12.0, horizontal: 12.0),
           decoration: BoxDecoration(
             color:
             _selectedWeek != week ? Colors.blueAccent : Colors.white,

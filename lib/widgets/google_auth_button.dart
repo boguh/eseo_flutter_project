@@ -31,13 +31,12 @@ class _GoogleAccountToggleState extends State<GoogleAccountToggle> {
 
 
 
-        login().then((value) => setState(() {
-          accountCubit.updateAccount (value);
-        }));
+      login().then((value) => setState(() {
+        accountCubit.updateAccount (value);
+      }));
 
           }
       }
-
 
   @override
   Widget build(BuildContext context) {

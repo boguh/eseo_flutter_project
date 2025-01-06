@@ -1,3 +1,4 @@
+import 'package:app/widgets/google_auth_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -39,10 +40,10 @@ class EventDetailsPage extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Event created successfully')),
     );
-  }
-
-  @override
+  }@override
   Widget build(BuildContext context) {
+    bool showButton = isAuthenticated; // Votre condition ici.
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
@@ -59,7 +60,8 @@ class EventDetailsPage extends StatelessWidget {
             Icons.arrow_back_rounded,
             size: 35,
           ),
-          tooltip: 'Go back', onPressed: () {
+          tooltip: 'Go back',
+          onPressed: () {
             if (GoRouter.of(context).canPop()) {
               context.pop();
             } else {
@@ -75,19 +77,37 @@ class EventDetailsPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildEventDetails(),
-            ElevatedButton(
-              onPressed: () => _createEvent(context),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-                backgroundColor: Colors.blueAccent,
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+            Visibility(
+              visible: showButton,
+              replacement: ElevatedButton(
+                onPressed: null, // Bouton désactivé (grisé)
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                  backgroundColor: Colors.grey, // Couleur grise
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                child: const Text(
+                  'Create Event',
+                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
-              child: const Text(
-                'Create Event',
-                style: TextStyle(fontSize: 16, color: Colors.white),
+              child: ElevatedButton(
+                onPressed: () => _createEvent(context),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                  backgroundColor: Colors.blueAccent,
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                child: const Text(
+                  'Create Event',
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
               ),
             ),
           ],
@@ -95,6 +115,7 @@ class EventDetailsPage extends StatelessWidget {
       ),
     );
   }
+
 
   Widget _buildEventDetails() {
     return Column(

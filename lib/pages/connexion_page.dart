@@ -36,11 +36,8 @@ Future<bool> login() async {
       return false; // The user canceled the sign-in
     }
 
-    final GoogleSignInAuthentication googleAuth = await googleUser
-        .authentication;
-
-
     final client = await googleSignIn.authenticatedClient();
+
     if (client == null) {
       return false;
     } else {
@@ -51,7 +48,6 @@ Future<bool> login() async {
       return true;
     }
   } catch (e) {
-    print('DEBUGGGG: Exception: $e');
     return false;
   }
 }

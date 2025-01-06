@@ -8,7 +8,6 @@ class NotificationToggle extends StatefulWidget {
 }
 
 class _NotificationToggleState extends State<NotificationToggle> {
-  bool _isNotificationEnabled = true; // Default state of the toggle
 
   @override
   Widget build(BuildContext context) {

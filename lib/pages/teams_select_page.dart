@@ -8,13 +8,35 @@ import '../utils/router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/icon_checkbox.dart';
 
+/// Page for selecting teams
+/// Here are the coded features :
+///   - Fetch teams from Firestore
+///   - Select a team
+///   - Mark a team as favorite
+///   - Filter by selected and/or marked teams
+///   - Search for a team
+///   - Refresh teams
+///   - Save selected and marked teams to SharedPreferences
+///   - Display a list of teams
+///   - Show a loading indicator while fetching teams
+///   - Show a snackbar on the status of fetching teams
 class TeamsPage extends StatefulWidget {
+
+  /// Constructor for the [TeamsPage] widget
   const TeamsPage({super.key});
 
+  /// Create a state for the [TeamsPage] widget
   @override
   State<TeamsPage> createState() => _TeamsPageState();
 }
 
+/// State class for the [TeamsPage] widget
+/// This class contains the state for the [TeamsPage] widget
+/// and implements the build method
+/// The state class also contains methods for fetching teams,
+/// selecting all teams, marking all teams, filtering teams,
+/// searching for teams, and saving team states to SharedPreferences
+/// The state class also initializes the page and loads teams from Firestore
 class _TeamsPageState extends State<TeamsPage> {
   bool _isInitialLoading = true;
   bool _isFetching = false;
@@ -33,6 +55,7 @@ class _TeamsPageState extends State<TeamsPage> {
     _initializePreferences();
   }
 
+  /// Initialize the SharedPreferences instance and load stored teams
   Future<void> _initializePreferences() async {
     _prefs = await SharedPreferences.getInstance();
     await Future.wait([
@@ -49,6 +72,7 @@ class _TeamsPageState extends State<TeamsPage> {
     }
   }
 
+  /// Load the selected and marked states of teams from SharedPreferences
   Future<void> _loadTeamStates() async {
     final selectedTeams = _prefs.getStringList(_selectedTeamsKey) ?? [];
 
@@ -59,6 +83,7 @@ class _TeamsPageState extends State<TeamsPage> {
     });
   }
 
+  /// Save the selected and marked states of teams to SharedPreferences
   Future<void> _saveTeamStates() async {
     final selectedTeams = _teams.entries
         .where((e) => e.value['selected'] == true)
@@ -70,6 +95,7 @@ class _TeamsPageState extends State<TeamsPage> {
     ]);
   }
 
+  /// Load stored teams from SharedPreferences
   Future<void> _loadStoredTeams() async {
     final String? storedTeams = _prefs.getString(_teamsPrefsKey);
     if (storedTeams != null) {
@@ -83,11 +109,13 @@ class _TeamsPageState extends State<TeamsPage> {
     }
   }
 
+  /// Save teams to SharedPreferences
   Future<void> _saveTeamsToPreferences() async {
     final String encodedTeams = json.encode(_teams);
     await _prefs.setString(_teamsPrefsKey, encodedTeams);
   }
 
+  /// Initialize the page by fetching teams from Firestore
   Future<void> _initializePage() async {
     setState(() => _isFetching = true);
     try {
@@ -139,6 +167,7 @@ class _TeamsPageState extends State<TeamsPage> {
     );
   }
 
+  /// Widget for the filter FAB
   Widget _buildFilterFAB() {
     return FloatingActionButton.extended(
       onPressed: () {
@@ -202,6 +231,7 @@ class _TeamsPageState extends State<TeamsPage> {
     );
   }
 
+  /// Build the app bar
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
       toolbarHeight: 100,
@@ -227,6 +257,7 @@ class _TeamsPageState extends State<TeamsPage> {
     );
   }
 
+  /// Build the body of the widget
   Widget _buildBody() {
     return SafeArea(
       child: Padding(
@@ -258,6 +289,7 @@ class _TeamsPageState extends State<TeamsPage> {
     );
   }
 
+  /// Build the add team button widget
   Widget _buildAddTeamButton() {
     return SizedBox(
       width: double.infinity,
@@ -300,17 +332,20 @@ class _TeamsPageState extends State<TeamsPage> {
     );
   }
 
+  /// Build the search bar widget
   Widget _buildSearchBar() {
     return TextField(
       decoration: const InputDecoration(
         hintText: 'Search for a team',
         prefixIcon: Icon(Icons.search_rounded),
+        // Remove the underline
         border: InputBorder.none,
       ),
       onChanged: (value) => setState(() => _searchTerm = value),
     );
   }
 
+  /// Build the teams list widget
   Widget _buildTeamsList() {
     final filteredTeams = getFilteredTeams(_teams, _searchTerm, _showSelectedOnly);
 
@@ -358,14 +393,29 @@ class _TeamsPageState extends State<TeamsPage> {
                   _saveTeamStates();
                 },
               ),
+              const SizedBox(width: 12), // Add spacing between checkbox and text
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Text(
-                    team['teamName'],
-                    style: const TextStyle(fontSize: 15),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _formatTeamName(team),
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      team['championnat'],
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -373,6 +423,10 @@ class _TeamsPageState extends State<TeamsPage> {
         );
       },
     );
+  }
+
+  String _formatTeamName(Map<String, dynamic> team) {
+    return team['teamName'].split(' - ')[1];
   }
 
   @override

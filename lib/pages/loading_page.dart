@@ -22,7 +22,8 @@ class LoadingPage extends StatelessWidget {
                 'assets/images/buni_logo.svg',
                 width: 100,
                 height: 100,
-                color: Colors.black,
+                colorFilter: const ColorFilter.mode(
+                  Colors.black, BlendMode.srcIn),
               ),
               Text(
                 'Buni',

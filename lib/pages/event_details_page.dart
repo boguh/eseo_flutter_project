@@ -128,14 +128,14 @@ class EventDetailsPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Icon(Icons.home_rounded, size: 30),
-                Text(_formatTeamName(event.visitorTeam), style: const TextStyle(fontSize: 18)),
+                Text(_formatTeamName(event.homeTeam), style: const TextStyle(fontSize: 18)),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Icon(Icons.flight_rounded, size: 30),
-                Text(_formatTeamName(event.homeTeam), style: const TextStyle(fontSize: 18)),
+                Text(_formatTeamName(event.visitorTeam), style: const TextStyle(fontSize: 18)),
               ],
             ),
           ],

@@ -10,6 +10,7 @@ class Event {
   final String time;
   final String homeTeam;
   final String visitorTeam;
+  late bool isAwayTeam = false;
 
   /// Constructor for the [Event] class
   Event({
@@ -28,5 +29,10 @@ class Event {
       homeTeam: data['dom'] ?? '',
       visitorTeam: data['visit'] ?? '',
     );
+  }
+
+  /// Sets the [isAwayTeam] property
+  void setIsAwayTeam(bool bool) {
+    isAwayTeam = bool;
   }
 }

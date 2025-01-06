@@ -1,13 +1,12 @@
+import 'package:app/widgets/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/event.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 import '../services/matches_service.dart';
 import '../utils/router.dart';
 import '../widgets/calendar_widget.dart';
-import 'event_details_page.dart';
 
 String userEmail = '';
 String userName = '';
@@ -39,14 +38,10 @@ class _WelcomePageState extends State<WelcomePage> {
   bool _isLoading = false;
   int _selectedWeek = getCurrentWeekNumber();
   List<String> selectedTeams = [];
-  List<String> favoriteTeams = [];
   List<Event> selectedTeamsEvents = [];
-  List<Event> favoriteTeamsEvents = [];
 
   /// The list of events to display
   static const String _selectedTeamsKey = 'selected_teams';
-  static const String _markedTeamsKey = 'marked_teams';
-
   late SharedPreferences _prefs;
 
   /// Initialize the state
@@ -64,10 +59,8 @@ class _WelcomePageState extends State<WelcomePage> {
       _prefs = await SharedPreferences.getInstance();
       // We get the selected teams from the stored teams
       selectedTeams = _prefs.getStringList(_selectedTeamsKey) ?? [];
-      // We get the marked (favorites) teams from the stored teams
-      favoriteTeams = _prefs.getStringList(_markedTeamsKey) ?? [];
       selectedTeamsEvents.clear();
-      selectedTeamsEvents=await getSelectedTeamsMatches(selectedTeams, _selectedWeek,mounted,selectedTeamsEvents);
+      selectedTeamsEvents = await getSelectedTeamsMatches(selectedTeams, _selectedWeek,mounted,selectedTeamsEvents);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
@@ -107,7 +100,7 @@ class _WelcomePageState extends State<WelcomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (final match in selectedTeamsEvents) _buildEventCard(context, match),
+            for (final match in selectedTeamsEvents) EventCard(context: context, match: match, selectedTeams: selectedTeams),
           ],
         ),
       );
@@ -156,7 +149,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 _isLoading = true;
               });
               selectedTeamsEvents.clear();
-              selectedTeamsEvents=await getSelectedTeamsMatches(selectedTeams, _selectedWeek,mounted,selectedTeamsEvents);
+              selectedTeamsEvents=await getSelectedTeamsMatches(selectedTeams, _selectedWeek,mounted, selectedTeamsEvents);
               setState(() {
                 _isLoading = false;
               });
@@ -168,63 +161,13 @@ class _WelcomePageState extends State<WelcomePage> {
                 debugPrint('Week: $week');
               });
               selectedTeamsEvents.clear();
-              selectedTeamsEvents=await getSelectedTeamsMatches(selectedTeams, _selectedWeek,mounted,selectedTeamsEvents);
+              selectedTeamsEvents=await getSelectedTeamsMatches(selectedTeams, _selectedWeek,mounted, selectedTeamsEvents);
               setState(() {
                 _isLoading = false;
               });
             },
           ),
         ],
-      ),
-    );
-  }
-
-  /// Build an event card
-  Widget _buildEventCard(BuildContext context, Event match) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EventDetailsPage(event: match),
-          ),
-        );
-      },
-      child: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 20.0),
-        padding: const EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // Add a gap between the elements
-          children: [
-            Text(
-              '${match.date} at ${match.time}',
-              style: const TextStyle(
-                fontSize: 20.0,
-              ),
-            ),
-            const SizedBox(height: 5.0),
-            Text(
-              match.homeTeam,
-              style: const TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              match.visitorTeam,
-              style: const TextStyle(
-                fontSize: 16.0,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

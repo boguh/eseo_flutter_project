@@ -12,8 +12,7 @@ int getWeekNumber(String date) {
 }
 
 /// Fetch the matches for a selected team
-Future<List<Event>> _fetchSelectedTeamMatches(String teamName, int selectedWeek,mounted,selectedTeamsEvents) async {
-  print('Fetching matches for $teamName in week $selectedWeek');
+Future<List<Event>> _fetchSelectedTeamMatches(String teamName, int selectedWeek,mounted, selectedTeamsEvents) async {
 
   final QuerySnapshot querySnapshot =
   await FirebaseFirestore.instance.collection('equipes').get();
@@ -24,8 +23,8 @@ Future<List<Event>> _fetchSelectedTeamMatches(String teamName, int selectedWeek,
         for (Map<String, dynamic> match in doc['matches']) {
           String date = match['date'];
           if (getWeekNumber(date) == selectedWeek) {
-            print('Match: $match');
             Event event = Event.fromMap(match);
+            event.setIsAwayTeam(doc['teamName'].contains(event.visitorTeam.split(' ')[0]));
             selectedTeamsEvents.add(event);
           }
         }
@@ -36,13 +35,11 @@ Future<List<Event>> _fetchSelectedTeamMatches(String teamName, int selectedWeek,
 
 /// Fetch teams from Firestore
 Future<List<Event>> getSelectedTeamsMatches(selectedTeams,selectedWeek,mounted,selectedTeamsEvents) async {
-  print('Fetching matches for selected teams');
   if (selectedTeams == List.empty()) {
     return List.empty();
   }
   for (var team in selectedTeams) {
-    await _fetchSelectedTeamMatches(team, selectedWeek,mounted,selectedTeamsEvents);
+    await _fetchSelectedTeamMatches(team, selectedWeek,mounted, selectedTeamsEvents);
   }
-  print ('debugggg: $selectedWeek');
   return selectedTeamsEvents;
 }

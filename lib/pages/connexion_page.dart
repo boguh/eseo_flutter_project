@@ -17,7 +17,6 @@ void logout() async {
   );
 
   await googleSignIn.signOut();
-  print('DEBUGGGG: Google user signed out');
 }
 Future<bool> login() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,21 +35,8 @@ Future<bool> login() async {
       return false; // The user canceled the sign-in
     }
 
-    final GoogleSignInAuthentication googleAuth = await googleUser
-        .authentication;
-   /* final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    UserCredential userCredential = await FirebaseAuth.instance
-        .signInWithCredential(credential);
-    User? user = userCredential.user;
-    if (user == null) {
-      return false;
-    }*/
-
     final client = await googleSignIn.authenticatedClient();
+
     if (client == null) {
       return false;
     } else {
@@ -61,7 +47,6 @@ Future<bool> login() async {
       return true;
     }
   } catch (e) {
-    print('DEBUGGGG: Exception: $e');
     return false;
   }
 }

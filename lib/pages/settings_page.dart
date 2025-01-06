@@ -92,7 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ActionsMenu(
                 title: 'Preferences',
                 children: [
-                  const NotificationToggle(),
+
                   GestureDetector(
                     onTap: () {
                       // Redirection when tapping the entire widget

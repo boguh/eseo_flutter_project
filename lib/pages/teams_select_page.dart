@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../services/teams_select_service.dart';
 import '../utils/router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/icon_checkbox.dart';
@@ -37,22 +38,17 @@ class TeamsPage extends StatefulWidget {
 /// searching for teams, and saving team states to SharedPreferences
 /// The state class also initializes the page and loads teams from Firestore
 class _TeamsPageState extends State<TeamsPage> {
+  bool _isInitialLoading = true;
+  bool _isFetching = false;
+  String _searchTerm = '';
+   Map<String, Map<String, dynamic>> _teams = {};
+  bool _showSelectedOnly = false;
 
-  /// State variables
-  bool _isInitialLoading = true; // Initial loading state
-  bool _isFetching = false; // Fetching teams state
-  String _searchTerm = ''; // Search term
-  final Map<String, Map<String, dynamic>> _teams = {}; // Teams data
+  static const String _teamsPrefsKey = 'stored_teams';
+  static const String _selectedTeamsKey = 'selected_teams';
 
-  bool _showSelectedOnly = false; // Show selected teams only
+  late SharedPreferences _prefs;
 
-  /// Keys used for storing data in SharedPreferences
-  static const String _teamsPrefsKey = 'stored_teams'; // Key for storing teams
-  static const String _selectedTeamsKey = 'selected_teams'; // Key for storing selected teams
-
-  late SharedPreferences _prefs; // SharedPreferences instance
-
-  /// Initialize the state of the widget
   @override
   void initState() {
     super.initState();
@@ -123,7 +119,7 @@ class _TeamsPageState extends State<TeamsPage> {
   Future<void> _initializePage() async {
     setState(() => _isFetching = true);
     try {
-      await _fetchTeams();
+      _teams= await fetchTeams(mounted, _teams) ;
       await _saveTeamsToPreferences();
     } catch (e) {
       if (mounted) {
@@ -174,21 +170,31 @@ class _TeamsPageState extends State<TeamsPage> {
   /// Build the widget
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(context),
-      floatingActionButton: _buildFilterFAB(),
-      body: _isInitialLoading
-          ? const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text('Loading teams...'),
-          ],
-        ),
-      )
-          : _buildBody(),
+    return WillPopScope(
+      onWillPop: () async {
+        if (GoRouter.of(context).canPop()) {
+          context.pop();
+        } else {
+          context.go(RouteNames.settings.path);
+        }
+        return false;
+      },
+      child: Scaffold(
+        appBar: _buildAppBar(context),
+        floatingActionButton: _buildFilterFAB(),
+        body: _isInitialLoading
+            ? const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Loading teams...'),
+            ],
+          ),
+        )
+            : _buildBody(),
+      ),
     );
   }
 
@@ -372,7 +378,7 @@ class _TeamsPageState extends State<TeamsPage> {
 
   /// Build the teams list widget
   Widget _buildTeamsList() {
-    final filteredTeams = _getFilteredTeams();
+    final filteredTeams = getFilteredTeams(_teams, _searchTerm, _showSelectedOnly);
 
     if (filteredTeams.isEmpty) {
       return Center(
@@ -405,6 +411,7 @@ class _TeamsPageState extends State<TeamsPage> {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconCheckbox(
                 iconChecked: Icons.indeterminate_check_box,
@@ -430,6 +437,8 @@ class _TeamsPageState extends State<TeamsPage> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
+
+
                     Text(
                       team['championnat'],
                       style: const TextStyle(

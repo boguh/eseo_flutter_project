@@ -17,6 +17,7 @@ void logout() async {
   );
 
   await googleSignIn.signOut();
+  print('DEBUGGGG: Google user signed out');
 }
 Future<bool> login() async {
   WidgetsFlutterBinding.ensureInitialized();

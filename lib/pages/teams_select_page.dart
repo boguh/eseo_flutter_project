@@ -41,7 +41,7 @@ class _TeamsPageState extends State<TeamsPage> {
   bool _isInitialLoading = true;
   bool _isFetching = false;
   String _searchTerm = '';
-  final Map<String, Map<String, dynamic>> _teams = {};
+   Map<String, Map<String, dynamic>> _teams = {};
   bool _showSelectedOnly = false;
 
   static const String _teamsPrefsKey = 'stored_teams';
@@ -119,7 +119,7 @@ class _TeamsPageState extends State<TeamsPage> {
   Future<void> _initializePage() async {
     setState(() => _isFetching = true);
     try {
-      await fetchTeams(mounted, _teams);
+      _teams= await fetchTeams(mounted, _teams) ;
       await _saveTeamsToPreferences();
     } catch (e) {
       if (mounted) {
@@ -406,6 +406,8 @@ class _TeamsPageState extends State<TeamsPage> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
+
+
                     Text(
                       team['championnat'],
                       style: const TextStyle(

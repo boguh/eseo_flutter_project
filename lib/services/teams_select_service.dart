@@ -15,19 +15,21 @@ Map<String, Map<String, dynamic>> getFilteredTeams(teams,searchTerm,showSelected
   );
 }
 /// Fetch teams from Firestore
-Future<void> fetchTeams(mounted,teams) async {
+Future<Map<String, Map<String, dynamic>>> fetchTeams(mounted,teams) async {
   final QuerySnapshot querySnapshot =
   await FirebaseFirestore.instance.collection('equipes').get();
-  if (!mounted) return;
-
-    teams.clear();
+ // if (!mounted) return teams;
+  teams.clear();
+  print ('teams');
     for (var doc in querySnapshot.docs) {
       teams[doc.id] = {
         'teamName': doc['teamName'] as String,
+        'championnat': doc['championnat'] as String?  ?? '',
         'selected': false,
         'marked': false,
       };
     }
-
+    print ('teams: $teams');
+return teams;
 }
 

@@ -100,6 +100,9 @@ Buni is a mobile application for Android that allows basketball enthusiasts to t
   - Stores user team selections
   - Caches team data for offline access
   - Maintains user preferences
+- **Cubits**:
+  - `teams_cubit` to store the favorite teams
+  - `account_cubit` to store the account's informations
 
 ## Authentication
 

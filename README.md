@@ -96,7 +96,8 @@ Buni is a mobile application for Android that allows basketball enthusiasts to t
 - **Authentication**: Manages user accounts and sessions
 
 ### Local Storage
-- **SharedPreferences**:
+  - Qubits:
+      -
   - Stores user team selections
   - Caches team data for offline access
   - Maintains user preferences

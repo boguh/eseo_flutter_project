@@ -1,5 +1,5 @@
 import 'package:app/services/account_cubit.dart';
-import 'package:app/services/teams_qubit.dart';
+import 'package:app/services/teams_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../utils/router.dart';

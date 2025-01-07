@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../models/event.dart';
 import '../services/matches_service.dart';
-import '../services/teams_qubit.dart';
+import '../services/teams_cubit.dart';
 import '../utils/router.dart';
 import '../widgets/calendar_widget.dart';
 import '../widgets/event_card.dart';

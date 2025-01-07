@@ -1,6 +1,3 @@
-import 'dart:ffi';
-
-import 'package:app/widgets/google_auth_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountCubit extends Cubit<Map<String,dynamic>> {
@@ -15,6 +12,5 @@ class AccountCubit extends Cubit<Map<String,dynamic>> {
     emit({
       'isAuthenticated': isAuthenticated,
     });
-
   }
 }
